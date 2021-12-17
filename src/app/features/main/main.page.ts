@@ -80,41 +80,44 @@ export class MainPageComponent extends BaseComponent {
 				if (balance.status === "0") {
 					this.toastrService.error(balance.result);
 				} else {
-					this.appStateFacade.setAddress(address);
-					console.log("balance:", balance);
-					this.accountBalance = balance.result;
-					this.calculateDollarPrice();
-					this.calculateSimpBnb();
-					this.transactions = (await this.bscScanProvider.getSimpTransactions(address)).result;
-
-					let totalSimpBought = 0;
-					for (const transaction of this.transactions) {
-						console.log("transaction:", transaction);
-						console.log("transaction value:", parseInt(transaction.value));
-						totalSimpBought += parseInt(transaction.value);
-					}
-					console.log("balance:", parseInt(balance.result));
-					console.log("totalSimpBought:", totalSimpBought);
-					this.totalReflections = (parseInt(balance.result) - totalSimpBought).toString();
-					console.log("this.totalReflections:", this.totalReflections);
-					this.calculateReflectionsDollarPrice();
-					this.calculateReflectionsBnbPrice();
-
-					for (const transaction of this.transactions) {
-						const txDetails = await this.bscScanProvider.getTransactionDetails(transaction.hash);
-						console.log("txDetails.value:", txDetails.value);
-						const value = txDetails.value.substring(0,1) + "." + txDetails.value.substring(1, 5);
-						console.log("value:", value);
-						transaction.bnbAmount = value;
-					}
+					setTimeout(async () => {
+						this.appStateFacade.setAddress(address);
+						console.log("balance:", balance);
+						this.accountBalance = balance.result;
+						this.calculateDollarPrice();
+						this.calculateSimpBnb();
+						this.transactions = (await this.bscScanProvider.getSimpTransactions(address)).result;
+	
+						let totalSimpBought = 0;
+						for (const transaction of this.transactions) {
+							console.log("transaction:", transaction);
+							console.log("transaction value:", parseInt(transaction.value));
+							totalSimpBought += parseInt(transaction.value);
+						}
+						console.log("balance:", parseInt(balance.result));
+						console.log("totalSimpBought:", totalSimpBought);
+						this.totalReflections = (parseInt(balance.result) - totalSimpBought).toString();
+						console.log("this.totalReflections:", this.totalReflections);
+						this.calculateReflectionsDollarPrice();
+						this.calculateReflectionsBnbPrice();
+	
+						for (const transaction of this.transactions) {
+							const txDetails = await this.bscScanProvider.getTransactionDetails(transaction.hash);
+							console.log("txDetails.value:", txDetails.value);
+							const value = txDetails.value.substring(0,1) + "." + txDetails.value.substring(1, 5);
+							console.log("value:", value);
+							transaction.bnbAmount = value;
+						}
+						this.loading = false;
+					}, 6000);
 				}
 			} else {
 				this.toastrService.error("User address input not valid");
 			}
 		} catch (error) {
 			console.error(error);
+			this.loading = false;
 		}
-		this.loading = false;
 	}
 
 	openTransactionLink(transaction: IBscTransaction): void {

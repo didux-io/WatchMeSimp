@@ -7,8 +7,6 @@ import { STORAGE_KEYS } from "./storage-keys";
 export const environment = {
     production: false,
     stateStorageKeys: STORAGE_KEYS,
-    bscScanApiKey: "D82WTQMKMFJ6WDQYYJCPJC4RI4CEWQXNYM",
-    // bscScanBnbApiKey: "KSPE45B1QQ5EQXRV2KXXJ5UDQPI23747DJ",
     simpContractAddress: "0xd0accf05878cafe24ff8b3f82f194c62ed755707"
 };
 

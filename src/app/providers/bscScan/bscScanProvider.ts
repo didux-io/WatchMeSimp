@@ -18,7 +18,7 @@ export class BscScanProvider {
         const action = "tokenbalance";
         const baseUrl = "https://api.bscscan.com/api";
         return firstValueFrom(this.http.get<any>(
-            `${baseUrl}?module=account&action=${action}&contractaddress=${environment.simpContractAddress}&address=${address}&tag=latest&apikey=${environment.bscScanApiKey}`
+            `${baseUrl}?module=account&action=${action}&contractaddress=${environment.simpContractAddress}&address=${address}&tag=latest`
         ));
     }
 
@@ -27,7 +27,7 @@ export class BscScanProvider {
         const action = "tokentx";
         const baseUrl = "https://api.bscscan.com/api";
         return firstValueFrom(this.http.get<IBscTransactionResult>(
-            `${baseUrl}?module=account&action=${action}&contractaddress=${environment.simpContractAddress}&address=${address}&page=1&offset=200&startblock=0&endblock=999999999&sort=desc&apikey=${environment.bscScanApiKey}`
+            `${baseUrl}?module=account&action=${action}&contractaddress=${environment.simpContractAddress}&address=${address}&page=1&offset=200&startblock=0&endblock=999999999&sort=desc`
         ));
     }
 
