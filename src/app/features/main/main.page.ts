@@ -21,6 +21,7 @@ export class MainPageComponent extends BaseComponent {
 	simpDollarPrice: any;
 	simpBnbPriceCalculated: any;
 	simpReflectionsDollarPrice: any;
+	simpReflectionsBnbPrice: any;
 
 	constructor(
 		private bscScanProvider: BscScanProvider,
@@ -62,6 +63,14 @@ export class MainPageComponent extends BaseComponent {
 		console.log("this.simpReflectionsDollarPrice:", this.simpReflectionsDollarPrice);
 	}
 
+	calculateReflectionsBnbPrice(): void {
+		console.log("calculateReflectionsDollarPrice");
+		console.log("this.totalReflections:", this.totalReflections);
+		console.log("this.simpPrice:", this.simpPrice);
+		this.simpReflectionsBnbPrice = ((parseFloat(this.totalReflections) / 1000000) * parseFloat(this.simpBnbPrice)).toFixed(2);
+		console.log("this.simpReflectionsBnbPrice:", this.simpReflectionsBnbPrice);
+	}
+
 	async retrieveSimpInformation(address: string): Promise<void> {
 		console.log("retrieveSimpInformation address:", address);
 		try {
@@ -89,6 +98,7 @@ export class MainPageComponent extends BaseComponent {
 					this.totalReflections = (parseInt(balance.result) - totalSimpBought).toString();
 					console.log("this.totalReflections:", this.totalReflections);
 					this.calculateReflectionsDollarPrice();
+					this.calculateReflectionsBnbPrice();
 
 					for (const transaction of this.transactions) {
 						const txDetails = await this.bscScanProvider.getTransactionDetails(transaction.hash);

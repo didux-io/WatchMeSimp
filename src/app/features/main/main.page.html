@@ -15,8 +15,7 @@
                 <div class="information-price">
                     <p class="header">SIMP Price</p>
                     <div class="balance-amount-div">
-                        <img src="/assets/img/simp-currency-logo.svg" />
-                        <p class="value">{{ simpPrice }}</p>
+                        <p class="value">${{ simpPrice }}</p>
                     </div>
                 </div>
                 <div class="divider"></div>
@@ -32,7 +31,7 @@
                     <p class="header">Total reflections</p>
                     <div class="balance-amount-div">
                         <img src="/assets/img/simp-currency-logo.svg" />
-                        <p class="value">{{ totalReflections | million }} - (${{ simpReflectionsDollarPrice }})</p>
+                        <p class="value">{{ totalReflections | million }} - (${{ simpReflectionsDollarPrice }}) - {{ simpReflectionsBnbPrice }} BNB</p>
                     </div>
                 </div>
                 <div class="divider"></div>
