@@ -1,0 +1,43 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "allowSyntheticDefaultImports":true,
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es6",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "vm": [
+        "node_modules/vm-browserify/index.js"
+      ],
+      "crypto": [
+        "node_modules/crypto-browserify/index.js"
+      ],
+      "https": [
+        "node_modules/https-browserify/index.js"
+      ],
+      "http": [
+        "node_modules/http-browserify/index.js"
+      ],
+      "os": [
+        "node_modules/os-browserify/main.js"
+      ],
+      "stream": [
+        "node_modules/stream-browserify/index.js"
+      ]
+    }
+  }
+}
