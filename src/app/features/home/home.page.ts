@@ -1,14 +1,14 @@
 import { Component } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import moment from "moment";
 import { ToastrService } from "ngx-toastr";
-import { first, firstValueFrom, timer } from "rxjs";
+import { firstValueFrom } from "rxjs";
 import { IBscTransaction } from "src/app/interfaces/bsc-transaction.interface";
 import { BinanceProvider } from "src/app/providers/binance/binanceProvider";
 import { BscScanProvider } from "src/app/providers/bscScan/bscScanProvider";
 import { AppStateFacade } from "src/app/state/app/app.facade";
-import { BaseComponent } from "../base-component/base-component";
 import Web3 from "web3";
-import { ActivatedRoute } from "@angular/router";
+import { BaseComponent } from "../base-component/base-component";
 
 @Component({
 	templateUrl: "home.page.html",
@@ -32,7 +32,7 @@ export class HomePageComponent extends BaseComponent {
 	percentageProfit: number;
 
 	show = false;
-	showUSD = false;
+	showUSD = true;
 
 	constructor(
 		private bscScanProvider: BscScanProvider,
@@ -54,17 +54,6 @@ export class HomePageComponent extends BaseComponent {
 				this.checkAddress();
 			}
 		});
-
-
-
-		// this.binanceProvider.getBNBPriceOnDate(parseInt("1639999945000") / 1000, parseInt("1639999945000") / 1000).then(result =>{
-		// 	console.log("HERE:", result);
-		// });
-		// const startDate = moment("2021-12-15").startOf("day");
-		// console.log("startDate:", startDate.toString());
-		// this.binanceProvider.getBNBPriceOnDate(new Date(startDate.toString()).getTime() / 1000).then(result =>{
-		// 	console.log("HERE:", result);
-		// });
 	}
 
 	async checkAddress(): Promise<void> {
@@ -75,15 +64,12 @@ export class HomePageComponent extends BaseComponent {
 
 	async getWBNBFromTransactionReceipt(transaction: any): Promise<string> {
 		const wBnbConctractAddress = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-		const wBnbData = transaction.logs.find(x => x.address === wBnbConctractAddress);
-		let hexValue = null;
-		if (wBnbData) {
-			hexValue = wBnbData.data
-		} else {
-			hexValue = transaction.logs[0].data;
+		const hexValueWBNB = transaction.logs.find(x => x.address === wBnbConctractAddress);
+		console.log("hexValueWBNB:", hexValueWBNB);
+		let WBNB = "0";
+		if (hexValueWBNB) {
+			WBNB = Web3.utils.hexToNumberString(hexValueWBNB.data);
 		}
-		console.log("hexValue:", hexValue);
-		const WBNB = Web3.utils.hexToNumberString(hexValue);
 		console.log("WBNB:", WBNB);
 		return WBNB;
 	}
@@ -130,6 +116,11 @@ export class HomePageComponent extends BaseComponent {
 	async retrieveSimpInformation(address: string): Promise<void> {
 		console.log("retrieveSimpInformation address:", address);
 		this.show = true;
+		this.transactions = null;
+		this.simpDollarPrice = null;
+		this.accountBalance = null;
+		this.totalReflections = null;
+		this.percentageProfit = null;
 		try {
 			this.loading = true;
 			if (address.substring(0, 2) === "0x") {
@@ -157,16 +148,17 @@ export class HomePageComponent extends BaseComponent {
 						for (const transaction of this.transactions) {
 							const bought = transaction.to.toLowerCase() === address.toLowerCase();
 							transaction.bought = bought;
+							transaction.transferIn = null;
 							console.log("bought:", bought);
 							console.log("transaction:", transaction);
 							console.log("transaction value:", parseInt(transaction.value));
 
 							if (bought) {
-								totalSimpBought = totalSimpBought + parseInt(transaction.value);
+								totalSimpBought = totalSimpBought + parseInt(transaction.value); //BBought or transfer in
 								console.log("parseInt(transaction.value):", parseInt(transaction.value));
 								console.log("totalSimpBought:", totalSimpBought);
 							} else {
-								totalSimpBought = totalSimpBought - (parseInt(transaction.value) / 0.915);
+								totalSimpBought = totalSimpBought - (parseInt(transaction.value) / 0.915); // Sold or transfer out
 								console.log("parseInt(transaction.value):", parseInt(transaction.value));
 								console.log("totalSimpBought:", totalSimpBought);
 							}
@@ -174,7 +166,16 @@ export class HomePageComponent extends BaseComponent {
 							const transactionReceipt = await this.bscScanProvider.getTransactionDetails(transaction.hash);
 							console.log("transactionReceipt:", transactionReceipt);
 							const wBnb = await this.getWBNBFromTransactionReceipt(transactionReceipt);
-							transaction.bnbAmount = Web3.utils.fromWei(wBnb, "ether");
+							if (wBnb  !== "0") {
+								transaction.bnbAmount = Web3.utils.fromWei(wBnb, "ether");
+							} else if (wBnb === "0" && bought) {
+								console.log("transfer in");
+								transaction.transferIn = true;
+							} else if (wBnb === "0" && !bought) {
+								console.log("transfer out");
+								transaction.transferIn = false;
+							}
+
 
 							const foundBnbPrice = bnbPriceHistory.find(x => x.transactionTimestamp === transaction.timeStamp);
 							// If we already retrieved the information from binance
@@ -195,8 +196,8 @@ export class HomePageComponent extends BaseComponent {
 								})
 							}
 
-							const dollarSpend = parseFloat(transaction.bnbAmount) * transaction.bnbPrice;
-							const currentBnbPrice = parseFloat(this.simpBnbPrice) * parseFloat(transaction.bnbAmount);
+							const dollarSpend = transaction.bnbAmount ? parseFloat(transaction.bnbAmount) * transaction.bnbPrice  : 0;
+							const currentBnbPrice = transaction.bnbAmount ? parseFloat(this.simpBnbPrice) * parseFloat(transaction.bnbAmount) : 0;
 							if (bought) {
 								console.log("dollarSpend:", dollarSpend);
 								totalSpend += dollarSpend;

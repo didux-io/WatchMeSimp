@@ -37,17 +37,13 @@
                 <!--                    <div class="text-black">$0.0000120251</div>-->
                 <!--                </div>-->
                 <div class="bg-white rounded-lg white-card" *ngIf="totalReflections">
-                    <div class="text-simp-pink">Reflections</div>
+                    <div class="text-simp-pink">Earned Reflections</div>
                     <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ totalReflections |
                         million }}</div>
                 </div>
                 <div class="bg-white rounded-lg white-card" *ngIf="simpDollarPrice">
                     <div class="text-simp-pink">Value</div>
-                    <div class="text-black">$ {{ simpDollarPrice }}</div>
-                </div>
-                <div class="bg-white rounded-lg white-card" *ngIf="percentageProfit">
-                    <div class="text-simp-pink">Profit %</div>
-                    <div class="text-black">{{ percentageProfit | number: '1.2-2' }}</div>
+                    <div class="text-black">$ {{ simpDollarPrice }} <span *ngIf="percentageProfit" class="d-flex fa-pull-right text-black" [ngClass]="percentageProfit < 0 ? 'loss' : 'profit'">{{ percentageProfit | number: '1.2-2' }} %</span></div>
                 </div>
             </div>
         </div>
@@ -78,7 +74,7 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-4 image-col">
             <img src="/assets/img/buy-simp.png" class="col-img">
             <div class="button-div">
                 <button class="btn simp-button" (click)="buySimpPancake()">
@@ -88,7 +84,7 @@
             </div>
         </div>
         <div class="col-12 col-md-8">
-            <p class="d-flex justify-content-end">BNB <ui-switch class="mr-1 ml-1" size="small" defaultBgColor="#ff3654"
+            <p class="d-flex justify-content-end toggle">BNB <ui-switch class="mr-1 ml-1" size="small" defaultBgColor="#ff3654"
                     defaultBoColor="black" switchColor="#fcfcfc" color="#39e5fd" [(ngModel)]="showUSD"></ui-switch> USD
             </p>
             <div class="input-div-main">
@@ -113,15 +109,17 @@
 
                                 </div>
                             </div>
-                            <div class="col-2 col-md-1 d-flex justify-content-end align-content-center">
-                                <span *ngIf="transaction.bought" class="chip buy-chip fa-pull-right">BUY</span>
-                                <span *ngIf="!transaction.bought" class="chip sell-chip fa-pull-right">SELL</span>
+                            <div class="col-2 col-md-2 d-flex justify-content-end align-content-center">
+                                <span *ngIf="transaction.transferIn === true" class="chip transfer-chip fa-pull-right">IN</span>
+                                <span *ngIf="transaction.transferIn === false" class="chip transfer-chip fa-pull-right">OUT</span>
+                                <span *ngIf="transaction.bought && transaction.transferIn === null" class="chip buy-chip fa-pull-right">BUY</span>
+                                <span *ngIf="!transaction.bought && transaction.transferIn === null" class="chip sell-chip fa-pull-right">SELL</span>
                             </div>
                             <div class="col-12 col-md-4 d-flex justify-content-end align-content-center">
-                                <div *ngIf="!showUSD" class="price justify-content-end fa-pull-right">{{
+                                <div *ngIf="!showUSD && transaction.bnbAmount" class="price justify-content-end fa-pull-right">{{
                                     transaction.bnbAmount | number: '1.0-8' }} BNB</div>
-                                <div *ngIf="showUSD" class="price justify-content-end fa-pull-right">$ {{
-                                    transaction.bnbAmount * transaction.bnbPrice | number: '1.0-2' }} USD</div>
+                                <div *ngIf="showUSD && transaction.bnbAmount" class="price justify-content-end fa-pull-right">$ {{
+                                    transaction.bnbAmount * transaction.bnbPrice | number: '1.0-2' }}</div>
                             </div>
                         </div>
                     </div>
@@ -139,53 +137,3 @@
         </div>
     </div>
 </div>
-
-<!--<div class="container output" *ngIf="accountBalance" id="output-container">-->
-<!--    <div class="input-div-main">-->
-<!--        <div class="result-div">-->
-<!--            <div class="information-price">-->
-<!--                <p class="header">SIMP Price</p>-->
-<!--                <div class="balance-amount-div">-->
-<!--                    <p class="value">${{ simpPrice }}</p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="divider"></div>-->
-<!--            <div class="information-balance">-->
-<!--                <p class="header">SIMP Balance</p>-->
-<!--                <div class="balance-amount-div">-->
-<!--                    <img src="/assets/img/simp-currency-logo.svg" />-->
-<!--                    <p class="value">{{ accountBalance | million }} - (${{ simpDollarPrice }}) - {{ simpBnbPriceCalculated }} BNB</p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="divider"></div>-->
-<!--            <div class="information-reflections">-->
-<!--                <p class="header">Total reflections</p>-->
-<!--                <div class="balance-amount-div">-->
-<!--                    <img src="/assets/img/simp-currency-logo.svg" />-->
-<!--                    <p class="value">{{ totalReflections | million }} - (${{ simpReflectionsDollarPrice }}) - {{ simpReflectionsBnbPrice }} BNB</p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="divider"></div>-->
-<!--            <div class="information-transactions">-->
-<!--                <p class="header">Transactions</p>-->
-<!--                <div *ngFor="let transaction of transactions"class="transaction-item">-->
-<!--                    <div class="balance-amount-div transaction-div">-->
-<!--                        <div class="transaction-value-left">-->
-<!--                            <div>-->
-<!--                                <p class="value">{{ transaction.timeStamp * 1000 | date:'d MMM, y, H:mm' }}</p>-->
-<!--                            </div>-->
-<!--                            <div>-->
-<!--                                <img src="/assets/img/simp-currency-logo.svg" />-->
-<!--                                <p class="value simp-value">{{ transaction.value | million }}</p>-->
-<!--                                <p class="value">- ({{ transaction.bnbAmount }} BNB)</p>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div>-->
-<!--                            <p class="value link" (click)="openTransactionLink(transaction)"> (Link)</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->

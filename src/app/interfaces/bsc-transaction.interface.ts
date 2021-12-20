@@ -19,6 +19,7 @@ export interface IBscTransaction {
     input: string;
     confirmations: string;
     bought?: boolean;
+    transferIn?: boolean;
     bnbAmount?: string;
     bnbValue?: string;
     bnbPrice?: number;

@@ -40,9 +40,17 @@
         }
     }
 
+    .text-black.loss {
+        color: rgb(255, 68, 68);
+    }
+
+    .text-black.profit {
+        color: rgb(0, 200, 81);
+    }
+
     .chip {
         border-radius: 8px;
-        padding: 6px;
+        padding: 2px 6px 2px 6px;
         font-size: 14px;
         font-weight: 400;
         line-height: 20px;
@@ -50,15 +58,29 @@
     }
 
     .buy-chip {
-        color: rgb(0,201,167);
-        border: 1px solid rgb(0,201,167);
-        background-color: rgba(0,201,167,.2);
+        color: rgb(0, 200, 81);
+        border: 1px solid rgb(0, 200, 81);
+        background-color: rgba(0, 200, 81, .2);
     }
 
     .sell-chip {
-        color: rgb(223, 71, 89);
-        border: 1px solid rgb(223, 71, 89);
-        background-color: rgba(223, 71, 89,.2);
+        color: rgb(255, 68, 68);
+        border: 1px solid rgb(255, 68, 68);
+        background-color: rgba(255, 68, 68, .2);
+    }
+
+    .transfer-chip {
+        color: rgb(51, 181, 229);
+        border: 1px solid rgb(51, 181, 229);
+        background-color: rgba(51, 181, 229, .2);
+    }
+
+    .toggle {
+        margin: 5px 0 5px;
+    }
+
+    .image-col {
+        padding: 20px 0 20px;
     }
 
     .copyright-sub {
@@ -77,7 +99,10 @@
     }
 
     h2 {
-        font-size: 20px;
+        font-size: 24px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 10px;
     }
 
     .price {
