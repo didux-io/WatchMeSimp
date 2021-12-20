@@ -80,7 +80,12 @@
                 </div>
                 <div *ngFor="let transaction of transactions" class="bg-white rounded-lg white-card">
                     <div class="text-simp-pink">{{ transaction.timeStamp * 1000 | date:'d MMM, y, H:mm' }}</div>
-                    <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ transaction.value | million }}</div>
+                    <div class="text-black">
+                        <img src="/assets/img/simp-currency-logo.svg" /> 
+                        <span *ngIf="!transaction.bought">-</span>
+                        <span *ngIf="transaction.bought">+</span>
+                        {{ transaction.value | million }}
+                    </div>
                 </div>
             </div>
         </div>

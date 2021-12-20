@@ -18,6 +18,7 @@ export interface IBscTransaction {
     cumulativeGasUsed: string;
     input: string;
     confirmations: string;
+    bought?: boolean;
     bnbAmount?: string;
     bnbValue?: string;
 }

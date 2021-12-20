@@ -30,6 +30,8 @@ export class MainPageComponent extends BaseComponent {
 	) {
 		super();
 		this.getSimpPrice();
+
+		
 	}
 
 	async getSimpPrice(): Promise<void> {

@@ -33,7 +33,7 @@ export class BscScanProvider {
 
     async getTransactionDetails(txHash: string): Promise<any> {
         const web3 = new Web3("https://bsc-dataseed1.binance.org:443");
-        const result = await web3.eth.getTransaction(txHash);
+        const result = await web3.eth.getTransactionReceipt(txHash);
         console.log("result:", result);
         return result;
     }
