@@ -3,8 +3,8 @@ import { ToastrService } from "ngx-toastr";
 import { IBscTransaction } from "src/app/interfaces/bsc-transaction.interface";
 import { BscScanProvider } from "src/app/providers/bscScan/bscScanProvider";
 import { AppStateFacade } from "src/app/state/app/app.facade";
-import Web3 from "web3";
 import { BaseComponent } from "../base-component/base-component";
+import Web3 from "web3";
 
 @Component({
 	templateUrl: "home.page.html",
@@ -27,11 +27,12 @@ export class HomePageComponent extends BaseComponent {
 	simpReflectionsBnbPrice: any;
 
 	show = false;
+	showUSD = false;
 
 	constructor(
 		private bscScanProvider: BscScanProvider,
 		private toastrService: ToastrService,
-		private appStateFacade: AppStateFacade
+		private appStateFacade: AppStateFacade,
 	) {
 		super();
 		this.getSimpPrice();
@@ -49,7 +50,7 @@ export class HomePageComponent extends BaseComponent {
 	async getSimpPrice(): Promise<void> {
 		const result = (await this.bscScanProvider.getSimpPrice()).data;
 		console.log("getSimpPrice:", result);
-		this.simpPrice = result.price.substring(0, 10);
+		this.simpPrice = result.price;
 		this.simpBnbPrice = result.price_BNB;
 		this.marketcap = parseFloat(this.simpPrice) * this.circulationSupply;
 	}

@@ -29,6 +29,7 @@ import { BscScanProvider } from "./providers/bscScan/bscScanProvider";
 import { StorageProvider } from "./providers/storage/capacitor-storage.provider";
 import { UtilsProvider } from "./providers/utils/utils";
 import { AppStateModule } from "./state/app/app.module";
+import { UiSwitchModule } from "ngx-toggle-switch";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -97,7 +98,8 @@ const NGXS_PROVIDERS: Provider[] = [
         FontAwesomeModule,
         NgbModule,
         ModalModule.forRoot(),
-        NgxSpinnerModule
+        NgxSpinnerModule,
+        UiSwitchModule
     ],
     providers: [
         ...NGXS_PROVIDERS,
