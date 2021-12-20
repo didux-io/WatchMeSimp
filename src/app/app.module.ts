@@ -25,6 +25,7 @@ import { HomePageComponent } from "./features/home/home.page";
 import { MainPageComponent } from "./features/main/main.page";
 import { StoragePlugin } from "./ngxs-plugins/storage/storage.plugin";
 import { MillionPipe } from "./pipes/million-pipe";
+import { BinanceProvider } from "./providers/binance/binanceProvider";
 import { BscScanProvider } from "./providers/bscScan/bscScanProvider";
 import { StorageProvider } from "./providers/storage/capacitor-storage.provider";
 import { UtilsProvider } from "./providers/utils/utils";
@@ -104,6 +105,7 @@ const NGXS_PROVIDERS: Provider[] = [
         UtilsProvider,
         BsModalService,
         BscScanProvider,
+        BinanceProvider,
         DecimalPipe
     ],
     bootstrap: [AppComponent]

@@ -9,5 +9,6 @@ import { IStorageKey } from "src/app/interfaces/storage-key.interface";
 */
 export const STORAGE_KEYS: (string | IStorageKey)[] = [
     // App state
-    "app.address"
+    "app.address",
+    "app.bnbPrices"
 ];

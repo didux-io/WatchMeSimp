@@ -3,11 +3,13 @@
         <div class="col-12 text-center">
             <img class="logo" src="/assets/img/simp-logo.svg" />
         </div>
-        <div  class="col-12 col-xl-8">
+        <div class="col-12 col-xl-8">
             <div class="input-div-main">
                 <div class="input-group">
-                    <input #address [value]="address$ | async" placeholder="0x11C43f8B67Fcc8270d53a795E95B09bBBbbf3ad5" type="text" class="form-control">
-                    <button class="btn" type="button" (click)="retrieveSimpInformation(address.value)" [disabled]="!address" id="watch me">
+                    <input #address [value]="address$ | async" placeholder="0x11C43f8B67Fcc8270d53a795E95B09bBBbbf3ad5"
+                        type="text" class="form-control">
+                    <button class="btn" type="button" (click)="retrieveSimpInformation(address.value)"
+                        [disabled]="!address" id="watch me">
                         <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
                         <span *ngIf="!loading">Simp me!</span>
                     </button>
@@ -19,7 +21,7 @@
 
 <div class="container output" *ngIf="show">
     <div class="row w-100 justify-content-center">
-        <div  class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-md-6 col-lg-4">
             <div class="input-div-main">
                 <h2 class="text-center">My wallet</h2>
                 <div class="rounded-lg text-center" *ngIf="!accountBalance">
@@ -27,15 +29,17 @@
                 </div>
                 <div class="bg-white rounded-lg white-card" *ngIf="accountBalance">
                     <div class="text-simp-pink">Balance</div>
-                    <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ accountBalance | million }}</div>
+                    <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ accountBalance | million
+                        }}</div>
                 </div>
-<!--                <div class="bg-white rounded-lg white-card">-->
-<!--                    <div class="text-simp-pink">Average price</div>-->
-<!--                    <div class="text-black">$0.0000120251</div>-->
-<!--                </div>-->
+                <!--                <div class="bg-white rounded-lg white-card">-->
+                <!--                    <div class="text-simp-pink">Average price</div>-->
+                <!--                    <div class="text-black">$0.0000120251</div>-->
+                <!--                </div>-->
                 <div class="bg-white rounded-lg white-card" *ngIf="totalReflections">
                     <div class="text-simp-pink">Reflections</div>
-                    <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ totalReflections | million }}</div>
+                    <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ totalReflections |
+                        million }}</div>
                 </div>
                 <div class="bg-white rounded-lg white-card" *ngIf="simpDollarPrice">
                     <div class="text-simp-pink">Value</div>
@@ -43,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <div  class="col-12 d-none d-lg-block col-lg-4">
+        <div class="col-12 d-none d-lg-block col-lg-4">
             <img src="/assets/img/space-simp.png" class="col-img">
         </div>
         <div class="col-12 col-md-6 col-lg-4">
@@ -59,41 +63,47 @@
                 </div>
                 <div class="bg-white rounded-lg white-card">
                     <div class="text-simp-pink">Circulating supply</div>
-                    <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ circulationSupply | number }}</div>
+                    <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ circulationSupply |
+                        number }}</div>
                 </div>
-<!-- Todo: find  out  how  to get volume, coingecko?               -->
-<!--                <div class="bg-white rounded-lg white-card">-->
-<!--                    <div class="text-simp-pink">Volume</div>-->
-<!--                    <div class="text-black">$46,769</div>-->
-<!--                </div>-->
+                <!-- Todo: find  out  how  to get volume, coingecko?               -->
+                <!--                <div class="bg-white rounded-lg white-card">-->
+                <!--                    <div class="text-simp-pink">Volume</div>-->
+                <!--                    <div class="text-black">$46,769</div>-->
+                <!--                </div>-->
             </div>
         </div>
 
         <div class="col-12 col-md-4">
             <img src="/assets/img/buy-simp.png" class="col-img">
         </div>
-        <div  class="col-12 col-md-8">
+        <div class="col-12 col-md-8">
             <div class="input-div-main">
                 <h2 class="text-center">Transactions</h2>
                 <div class="rounded-lg text-center" *ngIf="!transactions">
                     <span class="spinner-border spinner-border-sm"></span>
                 </div>
-                <div *ngFor="let transaction of transactions" class="bg-white rounded-lg white-card">
-                    <div class="text-simp-pink">{{ transaction.timeStamp * 1000 | date:'d MMM, y, H:mm' }}</div>
-                    <div class="text-black">
-                        <img src="/assets/img/simp-currency-logo.svg" /> 
-                        <span *ngIf="!transaction.bought">-</span>
-                        <span *ngIf="transaction.bought">+</span>
-                        {{ transaction.value | million }}
+                <ng-container *ngFor="let transaction of transactions">
+                    <div *ngIf="transaction.bnbPrice" class="bg-white rounded-lg white-card">
+                        <div class="text-simp-pink">{{ transaction.timeStamp * 1000 | date:'d MMM, y, H:mm' }}</div>
+                        <div class="text-black">
+                            <img src="/assets/img/simp-currency-logo.svg" />
+                            <span *ngIf="!transaction.bought">-</span>
+                            <span *ngIf="transaction.bought">+</span>
+                            {{ transaction.value | million }} -
+                            ({{ transaction.bnbAmount | number: '1.2-2' }} BNB ) -
+                            (${{ transaction.bnbPrice | number: '1.1-1' }} / BNB) -
+                            (${{ transaction.bnbAmount * transaction.bnbPrice | number: '1.2-2' }})
+                        </div>
                     </div>
-                </div>
+                </ng-container>
             </div>
         </div>
     </div>
 </div>
 
 <div class="container" id="footer">
-    <div class="row w-100 justify-content-center">
+    <div class="justify-content-center">
         <div class="col-12 text-center">
             <a href="https://watchmesimp.com" target="_blank" class="copyright">© WatchMeSimp.com</a>
             <p class="copyright-sub">WatchMeSimp is build with love for the SIMP community.</p>

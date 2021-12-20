@@ -1,6 +1,9 @@
 import { Component } from "@angular/core";
+import moment from "moment";
 import { ToastrService } from "ngx-toastr";
+import { firstValueFrom, timer } from "rxjs";
 import { IBscTransaction } from "src/app/interfaces/bsc-transaction.interface";
+import { BinanceProvider } from "src/app/providers/binance/binanceProvider";
 import { BscScanProvider } from "src/app/providers/bscScan/bscScanProvider";
 import { AppStateFacade } from "src/app/state/app/app.facade";
 import Web3 from "web3";
@@ -31,10 +34,20 @@ export class HomePageComponent extends BaseComponent {
 	constructor(
 		private bscScanProvider: BscScanProvider,
 		private toastrService: ToastrService,
-		private appStateFacade: AppStateFacade
+		private appStateFacade: AppStateFacade,
+		private binanceProvider: BinanceProvider
 	) {
 		super();
 		this.getSimpPrice();
+
+		// this.binanceProvider.getBNBPriceOnDate(parseInt("1639999945000") / 1000, parseInt("1639999945000") / 1000).then(result =>{
+		// 	console.log("HERE:", result);
+		// });
+		// const startDate = moment("2021-12-15").startOf("day");
+		// console.log("startDate:", startDate.toString());
+		// this.binanceProvider.getBNBPriceOnDate(new Date(startDate.toString()).getTime() / 1000).then(result =>{
+		// 	console.log("HERE:", result);
+		// });
 	}
 
 	async getWBNBFromTransactionReceipt(transaction: any): Promise<string> {
@@ -94,6 +107,8 @@ export class HomePageComponent extends BaseComponent {
 				const balance = await this.bscScanProvider.getAccountBalance(address);
 				if (balance.status === "0") {
 					this.toastrService.error(balance.result);
+					this.loading = false;
+					this.show = false;
 				} else {
 					setTimeout(async () => {
 						this.appStateFacade.setAddress(address);
@@ -102,7 +117,10 @@ export class HomePageComponent extends BaseComponent {
 						this.calculateDollarPrice();
 						this.calculateSimpBnb();
 						this.transactions = (await this.bscScanProvider.getSimpTransactions(address)).result;
-	
+
+
+						const bnbPriceHistory = await firstValueFrom(this.appStateFacade.bnbPriceHistory$);
+						console.log("bnbPriceHistory:", bnbPriceHistory);
 						let totalSimpBought = 0;
 						for (const transaction of this.transactions) {
 							const bought = transaction.to === address;
@@ -120,6 +138,30 @@ export class HomePageComponent extends BaseComponent {
 								console.log("parseInt(transaction.value):", parseInt(transaction.value));
 								console.log("totalSimpBought:", totalSimpBought);
 							}
+
+							const transactionReceipt = await this.bscScanProvider.getTransactionDetails(transaction.hash);
+							console.log("transactionReceipt:", transactionReceipt);
+							const wBnb = await this.getWBNBFromTransactionReceipt(transactionReceipt);
+							transaction.bnbAmount = Web3.utils.fromWei(wBnb, "ether");
+
+							const foundBnbPrice = bnbPriceHistory.find(x => x.transactionTimestamp === transaction.timeStamp);
+							// If we already retrieved the information from binance
+							if (foundBnbPrice) {
+								console.log("Found BNB price:", foundBnbPrice);
+								transaction.bnbPrice = foundBnbPrice.price;
+							// We dont have BNB price yet, add it
+							} else {
+								const startOfDay = moment(new Date(parseInt(transaction.timeStamp) * 1000)).startOf("minute").toString();
+								console.log("startOfDay:", startOfDay);
+								const bnbPrice = await this.binanceProvider.getBNBPriceOnDate(new Date(startOfDay).getTime());
+								console.log("bnbPrice:", bnbPrice);
+								await this.promiseWait(1000);
+								transaction.bnbPrice = bnbPrice;
+								this.appStateFacade.addToBnbPrices({
+									price: bnbPrice,
+									transactionTimestamp: transaction.timeStamp
+								})
+							}
 						}
 						console.log("balance:", parseInt(balance.result));
 						console.log("totalSimpBought:", totalSimpBought);
@@ -127,27 +169,28 @@ export class HomePageComponent extends BaseComponent {
 						console.log("this.totalReflections:", this.totalReflections);
 						this.calculateReflectionsDollarPrice();
 						this.calculateReflectionsBnbPrice();
-	
-						for (const transaction of this.transactions) {
-							const transactionReceipt = await this.bscScanProvider.getTransactionDetails(transaction.hash);
-							console.log("transactionReceipt:", transactionReceipt);
-							const wBnb = await this.getWBNBFromTransactionReceipt(transactionReceipt);
-							transaction.bnbAmount = Web3.utils.fromWei(wBnb, "ether");
-						}
+
 						this.loading = false;
 					}, 6000);
 				}
 			} else {
 				this.toastrService.error("User address input not valid");
+				this.show = false;
+				this.loading = false;
 			}
 		} catch (error) {
 			console.error(error);
 			this.loading = false;
+			this.show = false;
 		}
 	}
 
 	openTransactionLink(transaction: IBscTransaction): void {
 		window.open(`https://bscscan.com/tx/${transaction.hash}`)
+	}
+
+	promiseWait(ms: number): Promise<void> {
+		return new Promise(resolve => setTimeout(resolve, ms));
 	}
 }
 

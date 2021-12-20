@@ -21,4 +21,5 @@ export interface IBscTransaction {
     bought?: boolean;
     bnbAmount?: string;
     bnbValue?: string;
+    bnbPrice?: number;
 }
