@@ -15,6 +15,31 @@
         padding-bottom: 16px;
     }
 
+    .button-div {
+        justify-content: center;
+        display: flex;
+    }
+
+    .simp-button {
+        background: #F53655;
+        color: white;
+        border-radius: 50px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        width: 150px;
+        font-weight: bold;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        img {
+            width: 75px;
+        }
+    }
+
     .chip {
         border-radius: 8px;
         padding: 6px;

@@ -45,6 +45,10 @@
                     <div class="text-simp-pink">Value</div>
                     <div class="text-black">$ {{ simpDollarPrice }}</div>
                 </div>
+                <div class="bg-white rounded-lg white-card" *ngIf="percentageProfit">
+                    <div class="text-simp-pink">Profit %</div>
+                    <div class="text-black">{{ percentageProfit | number: '1.2-2' }}</div>
+                </div>
             </div>
         </div>
         <div class="col-12 d-none d-lg-block col-lg-4">
@@ -76,6 +80,12 @@
 
         <div class="col-12 col-md-4">
             <img src="/assets/img/buy-simp.png" class="col-img">
+            <div class="button-div">
+                <button class="btn simp-button" (click)="buySimpPancake()">
+                    Buy
+                    <img src="/assets/img/simp-whole-logo.svg">
+                </button>
+            </div>
         </div>
         <div class="col-12 col-md-8">
             <p class="d-flex justify-content-end">BNB <ui-switch class="mr-1 ml-1" size="small" defaultBgColor="#ff3654"

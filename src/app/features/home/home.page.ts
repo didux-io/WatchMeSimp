@@ -29,6 +29,7 @@ export class HomePageComponent extends BaseComponent {
 	simpBnbPriceCalculated: any;
 	simpReflectionsDollarPrice: any;
 	simpReflectionsBnbPrice: any;
+	percentageProfit: number;
 
 	show = false;
 	showUSD = false;
@@ -144,6 +145,9 @@ export class HomePageComponent extends BaseComponent {
 						const bnbPriceHistory = await firstValueFrom(this.appStateFacade.bnbPriceHistory$);
 						console.log("bnbPriceHistory:", bnbPriceHistory);
 						let totalSimpBought = 0;
+						let totalSpend = 0;
+						let totalIn = 0;
+						let totalOut = 0;
 						for (const transaction of this.transactions) {
 							const bought = transaction.to.toLowerCase() === address.toLowerCase();
 							transaction.bought = bought;
@@ -184,7 +188,29 @@ export class HomePageComponent extends BaseComponent {
 									transactionTimestamp: transaction.timeStamp
 								})
 							}
+
+							const dollarSpend = parseFloat(transaction.bnbAmount) * transaction.bnbPrice;
+							const currentBnbPrice = parseFloat(this.simpBnbPrice) * parseFloat(transaction.bnbAmount);
+							if (bought) {
+								console.log("dollarSpend:", dollarSpend);
+								totalSpend += dollarSpend;
+								totalIn += dollarSpend;
+								console.log("totalSpend:", totalSpend);
+							} else {
+								console.log("dollarSpend:", dollarSpend);
+								totalSpend -= dollarSpend;
+								totalOut += dollarSpend
+								console.log("totalSpend:", totalSpend);
+							}
+
 						}
+						console.log("totalOut:", totalOut);
+						console.log("totalIn:", totalIn);
+						const totalLoss = totalIn - totalOut;
+						console.log("totalLoss:", totalLoss);
+						const percentageProfit = ((((this.simpDollarPrice) / totalLoss) -1 ) * 100);
+						this.percentageProfit = percentageProfit;
+						console.log("percentageProfit:", percentageProfit);
 						console.log("balance:", parseInt(balance.result));
 						console.log("totalSimpBought:", totalSimpBought);
 						this.totalReflections = (parseInt(balance.result) - totalSimpBought).toString();
@@ -213,6 +239,10 @@ export class HomePageComponent extends BaseComponent {
 
 	promiseWait(ms: number): Promise<void> {
 		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	buySimpPancake(): void {
+		window.open("https://pancakeswap.finance/swap?inputCurrency=BNB&outputCurrency=0xd0accf05878cafe24ff8b3f82f194c62ed755707");
 	}
 }
 
