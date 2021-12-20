@@ -193,7 +193,7 @@ export class HomePageComponent extends BaseComponent {
 								console.log("startOfDay:", startOfDay);
 								const bnbPrice = await this.binanceProvider.getBNBPriceOnDate(new Date(startOfDay).getTime());
 								console.log("bnbPrice:", bnbPrice);
-								await this.promiseWait(1000);
+								await this.promiseWait(100);
 								transaction.bnbPrice = bnbPrice;
 								this.appStateFacade.addToBnbPrices({
 									price: bnbPrice,
