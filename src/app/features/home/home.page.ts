@@ -75,9 +75,15 @@ export class HomePageComponent extends BaseComponent {
 
 	async getWBNBFromTransactionReceipt(transaction: any): Promise<string> {
 		const wBnbConctractAddress = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-		const hexValueWBNB = transaction.logs.find(x => x.address === wBnbConctractAddress).data;
-		console.log("hexValueWBNB:", hexValueWBNB);
-		const WBNB = Web3.utils.hexToNumberString(hexValueWBNB);
+		const wBnbData = transaction.logs.find(x => x.address === wBnbConctractAddress);
+		let hexValue = null;
+		if (wBnbData) {
+			hexValue = wBnbData.data
+		} else {
+			hexValue = transaction.logs[0].data;
+		}
+		console.log("hexValue:", hexValue);
+		const WBNB = Web3.utils.hexToNumberString(hexValue);
 		console.log("WBNB:", WBNB);
 		return WBNB;
 	}
