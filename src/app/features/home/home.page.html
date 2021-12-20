@@ -32,10 +32,6 @@
                     <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ accountBalance | million
                         }}</div>
                 </div>
-                <!--                <div class="bg-white rounded-lg white-card">-->
-                <!--                    <div class="text-simp-pink">Average price</div>-->
-                <!--                    <div class="text-black">$0.0000120251</div>-->
-                <!--                </div>-->
                 <div class="bg-white rounded-lg white-card" *ngIf="totalReflections">
                     <div class="text-simp-pink">Earned Reflections</div>
                     <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ totalReflections |
@@ -65,6 +61,13 @@
                     <div class="text-simp-pink">Circulating supply</div>
                     <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ circulationSupply |
                         number }}</div>
+                </div>
+                <div class="socials">
+                    <a href="https://letsallsimp.com/" target="_blank"><fa-icon class="soc-icon" [icon]="['fas','globe-europe']"></fa-icon></a>
+                    <a href="https://t.me/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','telegram-plane']"></fa-icon></a>
+                    <a href="https://instagram.com/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','instagram']"></fa-icon></a>
+                    <a href="https://twitter.com/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','twitter']"></fa-icon></a>
+
                 </div>
                 <!-- Todo: find  out  how  to get volume, coingecko?               -->
                 <!--                <div class="bg-white rounded-lg white-card">-->

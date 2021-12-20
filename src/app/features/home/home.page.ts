@@ -9,6 +9,7 @@ import { BscScanProvider } from "src/app/providers/bscScan/bscScanProvider";
 import { AppStateFacade } from "src/app/state/app/app.facade";
 import Web3 from "web3";
 import { BaseComponent } from "../base-component/base-component";
+import { Location } from "@angular/common";
 
 @Component({
 	templateUrl: "home.page.html",
@@ -39,7 +40,8 @@ export class HomePageComponent extends BaseComponent {
 		private toastrService: ToastrService,
 		private appStateFacade: AppStateFacade,
 		private binanceProvider: BinanceProvider,
-		private router: ActivatedRoute
+		private router: ActivatedRoute,
+		private location: Location
 	) {
 		super();
 		this.getSimpPrice();
@@ -114,6 +116,7 @@ export class HomePageComponent extends BaseComponent {
 	}
 
 	async retrieveSimpInformation(address: string): Promise<void> {
+		this.location.replaceState("/"+address);
 		console.log("retrieveSimpInformation address:", address);
 		this.show = true;
 		this.transactions = null;
