@@ -6,10 +6,10 @@ import { AppStateFacade } from "src/app/state/app/app.facade";
 import { BaseComponent } from "../base-component/base-component";
 
 @Component({
-	templateUrl: "main.page.html",
-	styleUrls: ["main.page.scss"]
+	templateUrl: "home.page.html",
+	styleUrls: ["home.page.scss"]
 })
-export class MainPageComponent extends BaseComponent {
+export class HomePageComponent extends BaseComponent {
 
 	address$ = this.appStateFacade.address$;
 	accountBalance: string;
@@ -17,11 +17,15 @@ export class MainPageComponent extends BaseComponent {
 	transactions: IBscTransaction[];
 	loading: boolean;
 	simpPrice: string;
+	circulationSupply = 507116781500;
+	marketcap = 0;
 	simpBnbPrice: string;
 	simpDollarPrice: any;
 	simpBnbPriceCalculated: any;
 	simpReflectionsDollarPrice: any;
 	simpReflectionsBnbPrice: any;
+
+	show = false;
 
 	constructor(
 		private bscScanProvider: BscScanProvider,
@@ -37,7 +41,7 @@ export class MainPageComponent extends BaseComponent {
 		console.log("getSimpPrice:", result);
 		this.simpPrice = result.price.substring(0, 10);
 		this.simpBnbPrice = result.price_BNB;
-		// this.bnbPrice = reuslt
+		this.marketcap = parseFloat(this.simpPrice) * this.circulationSupply;
 	}
 
 	calculateDollarPrice(): void {
@@ -73,6 +77,7 @@ export class MainPageComponent extends BaseComponent {
 
 	async retrieveSimpInformation(address: string): Promise<void> {
 		console.log("retrieveSimpInformation address:", address);
+		this.show = true;
 		try {
 			this.loading = true;
 			if (address.substring(0, 2) === "0x") {

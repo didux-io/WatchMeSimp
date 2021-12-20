@@ -1,7 +1,7 @@
 {
-  "name": "identity-check",
+  "name": "watch-me-simp",
   "version": "1.0.0",
-  "description": "Identity check",
+  "description": "Simp wallet watcher",
   "scripts": {
     "prebuild": "node prebuild.js",
     "ng": "ng",
@@ -19,10 +19,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Proofme-id/Identity-Check.git"
+    "url": "git+https://github.com/didux-io/WatchMeSimp.git"
   },
   "bugs": {
-    "url": "https://github.com/Proofme-id/Identity-Check/issues"
+    "url": "https://github.com/didux-io/WatchMeSimp/issues"
   },
   "pre-commit": {
     "run": [
@@ -31,7 +31,7 @@
       "translations:add"
     ]
   },
-  "homepage": "https://www.proofme.id",
+  "homepage": "https://www.didux.io",
   "author": "Didux.io",
   "license": "GPL-3.0-only",
   "jest": {
@@ -96,12 +96,9 @@
     "bignumber.js": "^9.0.2",
     "bootstrap": "4.5.3",
     "http-browserify": "^1.7.0",
-    "jwt-decode": "3.0.0",
     "moment": "^2.29.1",
     "ngx-bootstrap": "^6.1.0",
     "ngx-device-detector": "^2.0.0",
-    "ngx-easy-table": "^13.0.3",
-    "ngx-select-ex": "4.0.0",
     "ngx-spinner": "^10.0.1",
     "ngx-toastr": "13.1.0",
     "rxjs": "^7.4.0",

@@ -1,9 +1,11 @@
+import { CommonModule, DecimalPipe } from "@angular/common";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { NgModule, Provider } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FaIconLibrary, FontAwesomeModule } from "@fortawesome/angular-fontawesome";
+import { fab } from "@fortawesome/free-brands-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -12,15 +14,18 @@ import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { NGXS_STORAGE_PLUGIN_OPTIONS, STORAGE_ENGINE } from "@ngxs-labs/async-storage-plugin";
 import { NgxsReduxDevtoolsPluginModule } from "@ngxs/devtools-plugin";
 import { NGXS_PLUGINS, NgxsModule } from "@ngxs/store";
-import { BsDatepickerModule } from "ngx-bootstrap/datepicker";
-import { ModalModule } from "ngx-bootstrap/modal";
+import { BsModalService, ModalModule } from "ngx-bootstrap/modal";
 import { PopoverModule } from "ngx-bootstrap/popover";
-import { NgxSelectModule } from "ngx-select-ex";
+import { NgxSpinnerModule } from "ngx-spinner";
 import { ToastrModule } from "ngx-toastr";
 import { environment } from "src/environments/environment";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
+import { HomePageComponent } from "./features/home/home.page";
+import { MainPageComponent } from "./features/main/main.page";
 import { StoragePlugin } from "./ngxs-plugins/storage/storage.plugin";
+import { MillionPipe } from "./pipes/million-pipe";
+import { BscScanProvider } from "./providers/bscScan/bscScanProvider";
 import { StorageProvider } from "./providers/storage/capacitor-storage.provider";
 import { UtilsProvider } from "./providers/utils/utils";
 import { AppStateModule } from "./state/app/app.module";
@@ -35,7 +40,6 @@ const NGXS_MODULES = [
         developmentMode: !environment.production
     }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
-    NgxSelectModule,
     AppStateModule
 ];
 
@@ -62,13 +66,15 @@ const NGXS_PROVIDERS: Provider[] = [
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        HomePageComponent,
+        MainPageComponent,
+        MillionPipe
     ],
     imports: [
         HttpClientModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
-        NgxSelectModule,
         AppRoutingModule,
         BrowserModule,
         ToastrModule.forRoot({}),
@@ -83,18 +89,28 @@ const NGXS_PROVIDERS: Provider[] = [
         }),
         ...NGXS_MODULES,
         PopoverModule.forRoot(),
-        BsDatepickerModule.forRoot(),
         ModalModule.forRoot(),
+        TranslateModule,
+        ReactiveFormsModule,
+        CommonModule,
+        FormsModule,
+        FontAwesomeModule,
+        NgbModule,
+        ModalModule.forRoot(),
+        NgxSpinnerModule
     ],
     providers: [
         ...NGXS_PROVIDERS,
         UtilsProvider,
+        BsModalService,
+        BscScanProvider,
+        DecimalPipe
     ],
     bootstrap: [AppComponent]
 })
 export class AppModule {
 
     constructor(library: FaIconLibrary) {
-        library.addIconPacks(fas, far);
+        library.addIconPacks(fas, far, fab);
     }
 }

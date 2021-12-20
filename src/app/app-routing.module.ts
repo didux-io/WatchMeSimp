@@ -1,10 +1,15 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
+import { HomePageComponent } from "./features/home/home.page";
+import { MainPageComponent } from "./features/main/main.page";
 
 const routes: Routes = [
     {
         path: "",
-        loadChildren: "./features/main/main.module#MainPageModule"
+        component: HomePageComponent
+    },{
+        path: "old",
+        component: MainPageComponent
     }
 ];
 
