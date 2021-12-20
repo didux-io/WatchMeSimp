@@ -6,29 +6,72 @@
         font-weight: 400;
         opacity: 0.8;
         margin-bottom: 0;
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    #footer {
+        padding-bottom: 16px;
+    }
+
+    .chip {
+        border-radius: 8px;
+        padding: 6px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        margin: auto;
+    }
+
+    .buy-chip {
+        color: rgb(0,201,167);
+        border: 1px solid rgb(0,201,167);
+        background-color: rgba(0,201,167,.2);
+    }
+
+    .sell-chip {
+        color: rgb(223, 71, 89);
+        border: 1px solid rgb(223, 71, 89);
+        background-color: rgba(223, 71, 89,.2);
     }
 
     .copyright-sub {
         font-size: 14px;
         font-weight: 300;
+        color: white;
         opacity: 0.7;
+
+        &:hover {
+            text-decoration: none;
+        }
+
+        .love {
+            color: #ff3654;
+        }
     }
 
     h2 {
         font-size: 20px;
     }
 
+    .price {
+        color: rgba(0,0,0,0.7);
+        font-size: 16px;
+        line-height: 20px;
+        font-weight: 600;
+        margin: auto;
+        margin-right: 0;
+    }
+
     .text-simp-pink {
         font-size: 14px;
-        --tw-text-opacity: 1;
-        color: rgba(255,54,84,var(--tw-text-opacity));
+        color: rgba(255,54,84,1);
         text-transform: uppercase;
-        //letter-spacing: .1em;
     }
 
     .text-black {
-        --tw-text-opacity: 1;
-        color: rgba(0,0,0,var(--tw-text-opacity));
+        color: rgba(0,0,0,1);
         font-size: 16px;
         line-height: 20px;
         font-weight: 600;

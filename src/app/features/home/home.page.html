@@ -78,6 +78,9 @@
             <img src="/assets/img/buy-simp.png" class="col-img">
         </div>
         <div class="col-12 col-md-8">
+            <p class="d-flex justify-content-end">BNB <ui-switch class="mr-1 ml-1" size="small" defaultBgColor="#ff3654"
+                    defaultBoColor="black" switchColor="#fcfcfc" color="#39e5fd" [(ngModel)]="showUSD"></ui-switch> USD
+            </p>
             <div class="input-div-main">
                 <h2 class="text-center">Transactions</h2>
                 <div class="rounded-lg text-center" *ngIf="!transactions">
@@ -85,15 +88,31 @@
                 </div>
                 <ng-container *ngFor="let transaction of transactions">
                     <div *ngIf="transaction.bnbPrice" class="bg-white rounded-lg white-card">
-                        <div class="text-simp-pink">{{ transaction.timeStamp * 1000 | date:'d MMM, y, H:mm' }}</div>
-                        <div class="text-black">
-                            <img src="/assets/img/simp-currency-logo.svg" />
-                            <span *ngIf="!transaction.bought">-</span>
-                            <span *ngIf="transaction.bought">+</span>
-                            {{ transaction.value | million }} -
-                            ({{ transaction.bnbAmount | number: '1.2-2' }} BNB ) -
-                            (${{ transaction.bnbPrice | number: '1.1-1' }} / BNB) -
-                            (${{ transaction.bnbAmount * transaction.bnbPrice | number: '1.2-2' }})
+                        <div class="row">
+                            <div class="col-10 col-md-6">
+                                <div class="text-simp-pink">{{ transaction.timeStamp * 1000 | date:'d MMM, y, H:mm' }}
+                                </div>
+                                <div class="text-black" *ngIf="transaction.bought">
+                                    <img src="/assets/img/simp-currency-logo.svg" />
+                                    {{ transaction.value | million }}
+
+                                </div>
+                                <div class="text-black" *ngIf="!transaction.bought">
+                                    <img src="/assets/img/simp-currency-logo.svg" />
+                                    {{ transaction.value / 0.915 | million }}
+
+                                </div>
+                            </div>
+                            <div class="col-2 col-md-1 d-flex justify-content-end align-content-center">
+                                <span *ngIf="transaction.bought" class="chip buy-chip fa-pull-right">BUY</span>
+                                <span *ngIf="!transaction.bought" class="chip sell-chip fa-pull-right">SELL</span>
+                            </div>
+                            <div class="col-12 col-md-4 d-flex justify-content-end align-content-center">
+                                <div *ngIf="!showUSD" class="price justify-content-end fa-pull-right">{{
+                                    transaction.bnbAmount | number: '1.0-8' }} BNB</div>
+                                <div *ngIf="showUSD" class="price justify-content-end fa-pull-right">$ {{
+                                    transaction.bnbAmount * transaction.bnbPrice | number: '1.0-2' }} USD</div>
+                            </div>
                         </div>
                     </div>
                 </ng-container>
@@ -101,12 +120,12 @@
         </div>
     </div>
 </div>
-
 <div class="container" id="footer">
     <div class="justify-content-center">
         <div class="col-12 text-center">
-            <a href="https://watchmesimp.com" target="_blank" class="copyright">© WatchMeSimp.com</a>
-            <p class="copyright-sub">WatchMeSimp is build with love for the SIMP community.</p>
+            <a href="https://watchmesimp.com" target="_blank" class="copyright">© WatchMeSimp.com</a><br>
+            <a href="https://didux.io" target="_blank" class="copyright-sub">WatchMeSimp is build with <fa-icon
+                    icon="heart" class="love"></fa-icon> by didux.io.</a>
         </div>
     </div>
 </div>

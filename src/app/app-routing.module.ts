@@ -7,9 +7,9 @@ const routes: Routes = [
     {
         path: "",
         component: HomePageComponent
-    },{
-        path: "old",
-        component: MainPageComponent
+    }, {
+        path: ":address",
+        component: HomePageComponent
     }
 ];
 

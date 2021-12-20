@@ -1,13 +1,14 @@
 import { Component } from "@angular/core";
 import moment from "moment";
 import { ToastrService } from "ngx-toastr";
-import { firstValueFrom, timer } from "rxjs";
+import { first, firstValueFrom, timer } from "rxjs";
 import { IBscTransaction } from "src/app/interfaces/bsc-transaction.interface";
 import { BinanceProvider } from "src/app/providers/binance/binanceProvider";
 import { BscScanProvider } from "src/app/providers/bscScan/bscScanProvider";
 import { AppStateFacade } from "src/app/state/app/app.facade";
-import Web3 from "web3";
 import { BaseComponent } from "../base-component/base-component";
+import Web3 from "web3";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
 	templateUrl: "home.page.html",
@@ -30,15 +31,30 @@ export class HomePageComponent extends BaseComponent {
 	simpReflectionsBnbPrice: any;
 
 	show = false;
+	showUSD = false;
 
 	constructor(
 		private bscScanProvider: BscScanProvider,
 		private toastrService: ToastrService,
 		private appStateFacade: AppStateFacade,
-		private binanceProvider: BinanceProvider
+		private binanceProvider: BinanceProvider,
+		private router: ActivatedRoute
 	) {
 		super();
 		this.getSimpPrice();
+
+		this.router.params.subscribe((params) => {
+			console.log("params:", params);
+			const address = params.address;
+			if (address) {
+				this.appStateFacade.setAddress(address);
+				this.retrieveSimpInformation(address);
+			} else {
+				this.checkAddress();
+			}
+		});
+
+
 
 		// this.binanceProvider.getBNBPriceOnDate(parseInt("1639999945000") / 1000, parseInt("1639999945000") / 1000).then(result =>{
 		// 	console.log("HERE:", result);
@@ -48,6 +64,12 @@ export class HomePageComponent extends BaseComponent {
 		// this.binanceProvider.getBNBPriceOnDate(new Date(startDate.toString()).getTime() / 1000).then(result =>{
 		// 	console.log("HERE:", result);
 		// });
+	}
+
+	async checkAddress(): Promise<void> {
+		const address = await firstValueFrom(this.appStateFacade.address$);
+		console.log("address:", address);
+		this.retrieveSimpInformation(address);
 	}
 
 	async getWBNBFromTransactionReceipt(transaction: any): Promise<string> {
@@ -62,7 +84,7 @@ export class HomePageComponent extends BaseComponent {
 	async getSimpPrice(): Promise<void> {
 		const result = (await this.bscScanProvider.getSimpPrice()).data;
 		console.log("getSimpPrice:", result);
-		this.simpPrice = result.price.substring(0, 10);
+		this.simpPrice = result.price;
 		this.simpBnbPrice = result.price_BNB;
 		this.marketcap = parseFloat(this.simpPrice) * this.circulationSupply;
 	}
@@ -123,7 +145,7 @@ export class HomePageComponent extends BaseComponent {
 						console.log("bnbPriceHistory:", bnbPriceHistory);
 						let totalSimpBought = 0;
 						for (const transaction of this.transactions) {
-							const bought = transaction.to === address;
+							const bought = transaction.to.toLowerCase() === address.toLowerCase();
 							transaction.bought = bought;
 							console.log("bought:", bought);
 							console.log("transaction:", transaction);

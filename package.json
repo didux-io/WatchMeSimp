@@ -101,6 +101,7 @@
     "ngx-device-detector": "^2.0.0",
     "ngx-spinner": "^10.0.1",
     "ngx-toastr": "13.1.0",
+    "ngx-toggle-switch": "^2.0.5",
     "rxjs": "^7.4.0",
     "rxjs-compat": "^6.6.7",
     "tslib": "^2.3.1",
