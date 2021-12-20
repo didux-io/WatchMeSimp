@@ -22,7 +22,6 @@ import { environment } from "src/environments/environment";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { HomePageComponent } from "./features/home/home.page";
-import { MainPageComponent } from "./features/main/main.page";
 import { StoragePlugin } from "./ngxs-plugins/storage/storage.plugin";
 import { MillionPipe } from "./pipes/million-pipe";
 import { BinanceProvider } from "./providers/binance/binanceProvider";
@@ -70,7 +69,6 @@ const NGXS_PROVIDERS: Provider[] = [
     declarations: [
         AppComponent,
         HomePageComponent,
-        MainPageComponent,
         MillionPipe
     ],
     imports: [
