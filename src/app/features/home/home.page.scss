@@ -1,0 +1,120 @@
+:host {
+    .main {
+        height: 100%;
+        background: #101217;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .input-div-main {
+        width: 200px;
+        padding: 40px;
+        width: 600px;
+        background: linear-gradient(135deg,#39e5fd 0,#39e5fd 15%,#ff3654 85%,#ff3654 100%);
+        border-radius: 4px;
+
+        .input-div {
+            display: flex;
+
+            input {
+                border-radius: 4px;
+                outline: none;
+                border: none;
+                width: 100%;
+                padding: 8px;
+                font-size: 16px;
+            }
+    
+            button {
+                margin-left: 16px;
+                display: flex;
+                background: rgba(16, 18, 23, 0.75);
+                color: white;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    .logo-div {
+        display: flex;
+        justify-content: center;
+
+        img {
+            margin-bottom: -30px;
+        }
+    }
+
+    .result-div {
+        background: #101217;
+        margin-top: 24px;
+        border-radius: 4px;
+        padding: 16px;
+
+        .header {
+            margin-bottom: 8px;
+        }
+
+        .value {
+            margin-bottom: 0px;
+        }
+    }
+
+    .balance-amount-div {
+        display: flex;
+
+        img {
+            width: 18px;
+            margin-right: 8px;
+        }
+    }
+
+    .spinner-border {
+        margin-left: 8px;
+    }
+
+    .divider {
+        margin-top: 16px;
+        margin-bottom: 16px;
+        background: #585858;
+        height: 1px;
+    }
+
+    .link {
+        margin-left: 4px;
+        &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+            color: lightblue;
+        }
+    }
+
+    .transaction-item {
+        margin-bottom: 16px;
+    }
+
+    .information-balance {
+        margin-top: 12px;
+    }
+
+    .simp-value {
+        margin-right: 4px;
+    }
+
+    .transaction-div {
+        display: flex;
+        justify-content: space-between;
+
+        div {
+            display: flex;
+        }
+    }
+    
+    .transaction-value-left {
+        display: flex;
+        flex-direction: column;
+    }
+}

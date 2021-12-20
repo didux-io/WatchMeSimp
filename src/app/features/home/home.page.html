@@ -1,0 +1,61 @@
+<div class="main">
+    <div class="main-content">
+        <div class="logo-div">
+            <img src="/assets/img/simp-logo.svg" />
+        </div>
+        <div class="input-div-main">
+            <div class="input-div">
+                <input #address [value]="address$ | async" placeholder="0x11C43f8B67Fcc8270d53a795E95B09bBBbbf3ad5" type="text" />
+                <button class="btn" (click)="retrieveSimpInformation(address.value)" [disabled]="!address">
+                    Simp it
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+                </button>
+            </div>
+            <div *ngIf="accountBalance"class="result-div">
+                <div class="information-price">
+                    <p class="header">SIMP Price</p>
+                    <div class="balance-amount-div">
+                        <p class="value">${{ simpPrice }}</p>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="information-balance">
+                    <p class="header">SIMP Balance</p>
+                    <div class="balance-amount-div">
+                        <img src="/assets/img/simp-currency-logo.svg" />
+                        <p class="value">{{ accountBalance | million }} - (${{ simpDollarPrice }}) - {{ simpBnbPriceCalculated }} BNB</p>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="information-reflections">
+                    <p class="header">Total reflections</p>
+                    <div class="balance-amount-div">
+                        <img src="/assets/img/simp-currency-logo.svg" />
+                        <p class="value">{{ totalReflections | million }} - (${{ simpReflectionsDollarPrice }}) - {{ simpReflectionsBnbPrice }} BNB</p>
+                    </div>
+                </div>
+                <div class="divider"></div>
+                <div class="information-transactions">
+                    <p class="header">Transactions</p>
+                    <div *ngFor="let transaction of transactions"class="transaction-item">
+                        <div class="balance-amount-div transaction-div">
+                            <div class="transaction-value-left">
+                                <div>
+                                    <p class="value">{{ transaction.timeStamp * 1000 | date:'d MMM, y, H:mm' }}</p>
+                                </div>
+                                <div>
+                                    <img src="/assets/img/simp-currency-logo.svg" />
+                                    <p class="value simp-value">{{ transaction.value | million }}</p>
+                                    <p class="value">- ({{ transaction.bnbAmount }} BNB)</p>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="value link" (click)="openTransactionLink(transaction)"> (Link)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
