@@ -116,7 +116,9 @@ export class HomePageComponent extends BaseComponent {
 	}
 
 	async retrieveSimpInformation(address: string): Promise<void> {
-		this.location.replaceState("/"+address);
+		if(address !== null) {
+			this.location.replaceState("/"+address);
+		}
 		console.log("retrieveSimpInformation address:", address);
 		this.show = true;
 		this.transactions = null;
