@@ -26,10 +26,10 @@ export class HomePageComponent extends BaseComponent {
 	circulationSupply = 507116781500;
 	marketcap = 0;
 	simpBnbPrice: string;
-	simpDollarBalance: any;
-	simpBnbPriceCalculated: any;
-	simpReflectionsDollarPrice: any;
-	simpReflectionsBnbPrice: any;
+	simpDollarBalance: string;
+	simpBnbPriceCalculated: string;
+	simpReflectionsDollarPrice: string;
+	simpReflectionsBnbPrice: string;
 	percentageProfit: number;
 	PNLDollar: number;
 	socialShareImage = null;
@@ -80,30 +80,27 @@ export class HomePageComponent extends BaseComponent {
 			const lossColor = "#FF4444";
 			// this.percentageProfit = 253.64; // For testing
 			context.fillStyle = this.percentageProfit > 0 ? profitColor : lossColor;
+			context.textAlign = "center";
 			const roiSymbol = this.percentageProfit > 0 ? "+" : "";
 			if (this.percentageProfit > 0) {
-				context.fillText(`${roiSymbol}${this.percentageProfit.toFixed(2)}%`, 290, 820);
+				context.fillText(`${roiSymbol}${this.percentageProfit.toFixed(2)}%`, 450, 800);
 			} else {
-				context.fillText(`${roiSymbol}${this.percentageProfit.toFixed(2)}%`, 300, 820);
+				context.fillText(`${roiSymbol}${this.percentageProfit.toFixed(2)}%`, 450, 800);
 			}
 
 			// Step 3: Set the price text
 			context.font = "bold 40px Arial";
 			context.fillStyle = "#39E5FD";
-			context.fillText(`$ ${parseFloat(this.simpPrice).toFixed(10)}`, 70, 1060);
+			context.fillText(`$ ${parseFloat(this.simpPrice).toFixed(10)}`, 225, 1050);
 
 			// Step 4: Set the marketcap text
 			context.font = "bold 40px Arial";
 			context.fillStyle = "#FF3654";
-			context.fillText(`$ ${this.numberWithCommas(this.marketcap.toFixed(0))}`, 570, 1060);
+			context.fillText(`$ ${this.marketcap.toLocaleString("en-US", { maximumFractionDigits: 0})}`, 675, 1050);
 
 			// Step 5: Export the image as base64
 			this.socialShareImage = canvas.toDataURL();
 		}
-	}
-
-	numberWithCommas(x): string {
-		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 
 	clearSocialImage(): void {
@@ -113,7 +110,7 @@ export class HomePageComponent extends BaseComponent {
 	async shareImage(): Promise<void> {
 		if (this.canShare()) {
 			const blob = await (await fetch(this.socialShareImage)).blob();
-			const file = new File([blob], "fileName.jpg", { type: blob.type });
+			const file = new File([blob], "watchmesimp.jpg", { type: blob.type });
 			const shareData = {
 				title: "Watch me SIMP",
 				text: "I am going to the moon with SIMP!",
@@ -132,11 +129,9 @@ export class HomePageComponent extends BaseComponent {
 	}
 
 	async downloadImage(): Promise<void> {
-		// const blob = await (await fetch(this.socialShareImage)).blob();
-		// const file = new File([blob], "fileName.jpg", { type: blob.type });
 		const a = document.createElement("a");
 		a.href = this.socialShareImage
-		a.download = "file.jpg";
+		a.download = "watchmesimp.jpg";
 		a.click();
 	}
 
@@ -340,10 +335,6 @@ export class HomePageComponent extends BaseComponent {
 			this.loading = false;
 			this.show = false;
 		}
-	}
-
-	openTransactionLink(transaction: IBscTransaction): void {
-		window.open(`https://bscscan.com/tx/${transaction.hash}`)
 	}
 
 	promiseWait(ms: number): Promise<void> {

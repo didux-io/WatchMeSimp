@@ -68,7 +68,7 @@
             width: 26px;
 
             &:hover {
-                color: #F53655;
+                fill: #F53655;
             }
         }
     }
@@ -150,6 +150,10 @@
         font-size: 16px;
         line-height: 20px;
         font-weight: 600;
+    }
+
+    .text-black.w400 {
+        font-weight: 400;
     }
 
     .popover-share-image {

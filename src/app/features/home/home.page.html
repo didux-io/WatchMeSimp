@@ -58,22 +58,22 @@
                             <img src="/assets/img/simp-currency-logo.svg" /> 
                             {{ accountBalance | million: '1.0-0' }}
                         </div>
-                        <span class="d-flex fa-pull-right text-black">$ {{ simpDollarBalance | number: '1.2-2' }}</span>
+                        <span class="d-flex fa-pull-right text-black w400">$ {{ simpDollarBalance | number: '1.2-2' }}</span>
                     </div>
                 </div>
                 <div class="bg-white rounded-lg white-card" *ngIf="totalReflections">
-                    <div class="text-simp-pink">Earned Reflections</div>
+                    <div class="text-simp-pink">Reflections</div>
                     <div class="text-black balance-div">
                         <div>
                             <img src="/assets/img/simp-currency-logo.svg" />
                             {{ totalReflections |million }} 
                         </div>
-                        <span class="d-flex fa-pull-right text-black profit">$ {{ (totalReflections / 1000000) * simpPrice | number: '1.2-2' }}</span>
+                        <span class="d-flex fa-pull-right text-black w400 profit">$ {{ (totalReflections / 1000000) * simpPrice | number: '1.2-2' }}</span>
                     </div>
                 </div>
                 <div (click)="shareSocial()" class="bg-white rounded-lg white-card share-card" *ngIf="PNLDollar">
-                    <div class="text-simp-pink">P&L</div>
-                    <div class="text-black balance-div" [ngClass]="percentageProfit < 0 ? 'loss' : 'profit'">$ {{ PNLDollar | number: '1.2-2' }} <span *ngIf="percentageProfit" class="d-flex fa-pull-right text-black" [ngClass]="percentageProfit < 0 ? 'loss' : 'profit'">{{ percentageProfit | number: '1.2-2' }} %</span></div>
+                    <div class="text-simp-pink">ROI</div>
+                    <div class="text-black balance-div" [ngClass]="percentageProfit < 0 ? 'loss' : 'profit'">$ {{ PNLDollar | number: '1.2-2' }} <span *ngIf="percentageProfit" class="d-flex fa-pull-right text-black w400" [ngClass]="percentageProfit < 0 ? 'loss' : 'profit'">{{ percentageProfit | number: '1.2-2' }} %</span></div>
                     <img class="share-icon soc-icon" src="/assets/img/share-icon.svg" />
                 </div>
             </div>
