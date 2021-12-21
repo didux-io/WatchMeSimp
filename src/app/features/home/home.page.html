@@ -6,14 +6,20 @@
         <div class="col-12 col-xl-8">
             <div class="input-div-main">
                 <div class="input-group">
-                    <input #address [value]="address$ | async" placeholder="0x11C43f8B67Fcc8270d53a795E95B09bBBbbf3ad5"
-                        type="text" class="form-control">
+                    <input #address [value]="address$ | async" placeholder="Fill in your wallet address to watch simps"
+                        type="text" class="form-control" (keyup.enter)="retrieveSimpInformation($event.target.value)">
                     <button class="btn" type="button" (click)="retrieveSimpInformation(address.value)"
                         [disabled]="!address" id="watch me">
                         <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
                         <span *ngIf="!loading">Simp me!</span>
                     </button>
                 </div>
+            </div>
+            <div *ngIf="!show" class="socials">
+                <a href="https://letsallsimp.com/" target="_blank"><fa-icon class="soc-icon" [icon]="['fas','globe-europe']"></fa-icon></a>
+                <a href="https://t.me/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','telegram-plane']"></fa-icon></a>
+                <a href="https://instagram.com/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','instagram']"></fa-icon></a>
+                <a href="https://twitter.com/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','twitter']"></fa-icon></a>
             </div>
         </div>
     </div>
@@ -35,7 +41,9 @@
                 <div class="bg-white rounded-lg white-card" *ngIf="totalReflections">
                     <div class="text-simp-pink">Earned Reflections</div>
                     <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ totalReflections |
-                        million }}</div>
+                        million }} 
+                        <span class="d-flex fa-pull-right text-black profit">$ {{ (totalReflections / 1000000) * simpPrice | number: '1.2-2' }}</span>
+                    </div>
                 </div>
                 <div class="bg-white rounded-lg white-card" *ngIf="simpDollarPrice">
                     <div class="text-simp-pink">Value</div>
@@ -67,7 +75,6 @@
                     <a href="https://t.me/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','telegram-plane']"></fa-icon></a>
                     <a href="https://instagram.com/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','instagram']"></fa-icon></a>
                     <a href="https://twitter.com/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','twitter']"></fa-icon></a>
-
                 </div>
                 <!-- Todo: find  out  how  to get volume, coingecko?               -->
                 <!--                <div class="bg-white rounded-lg white-card">-->

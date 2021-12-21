@@ -61,7 +61,9 @@ export class HomePageComponent extends BaseComponent {
 	async checkAddress(): Promise<void> {
 		const address = await firstValueFrom(this.appStateFacade.address$);
 		console.log("address:", address);
-		this.retrieveSimpInformation(address);
+		if (address) {
+			this.retrieveSimpInformation(address);
+		}
 	}
 
 	async getWBNBFromTransactionReceipt(transaction: any): Promise<string> {
@@ -147,9 +149,8 @@ export class HomePageComponent extends BaseComponent {
 						const bnbPriceHistory = await firstValueFrom(this.appStateFacade.bnbPriceHistory$);
 						console.log("bnbPriceHistory:", bnbPriceHistory);
 						let totalSimpBought = 0;
-						let totalSpend = 0;
 						let totalIn = 0;
-						let totalOut = 0;
+						let totalOut = parseFloat(this.simpDollarPrice);
 						for (const transaction of this.transactions) {
 							const bought = transaction.to.toLowerCase() === address.toLowerCase();
 							transaction.bought = bought;
@@ -191,7 +192,7 @@ export class HomePageComponent extends BaseComponent {
 							} else {
 								const startOfDay = moment(new Date(parseInt(transaction.timeStamp) * 1000)).startOf("minute").toString();
 								console.log("startOfDay:", startOfDay);
-								const bnbPrice = await this.binanceProvider.getBNBPriceOnDate(new Date(startOfDay).getTime());
+								const bnbPrice = parseFloat(await this.binanceProvider.getBNBPriceOnDate(new Date(startOfDay).getTime()));
 								console.log("bnbPrice:", bnbPrice);
 								await this.promiseWait(100);
 								transaction.bnbPrice = bnbPrice;
@@ -200,27 +201,20 @@ export class HomePageComponent extends BaseComponent {
 									transactionTimestamp: transaction.timeStamp
 								})
 							}
-
-							const dollarSpend = transaction.bnbAmount ? parseFloat(transaction.bnbAmount) * transaction.bnbPrice  : 0;
-							const currentBnbPrice = transaction.bnbAmount ? parseFloat(this.simpBnbPrice) * parseFloat(transaction.bnbAmount) : 0;
+							
+							console.log("transaction.bnbPrice:", transaction.bnbPrice);
+							const dollarSpend = transaction.bnbAmount ? parseFloat(transaction.bnbAmount) * transaction.bnbPrice : 0;
 							if (bought) {
 								console.log("dollarSpend:", dollarSpend);
-								totalSpend += dollarSpend;
 								totalIn += dollarSpend;
-								console.log("totalSpend:", totalSpend);
 							} else {
 								console.log("dollarSpend:", dollarSpend);
-								totalSpend -= dollarSpend;
-								totalOut += dollarSpend
-								console.log("totalSpend:", totalSpend);
+								totalOut += dollarSpend;
 							}
-
 						}
 						console.log("totalOut:", totalOut);
 						console.log("totalIn:", totalIn);
-						const totalLoss = totalIn - totalOut;
-						console.log("totalLoss:", totalLoss);
-						const percentageProfit = ((((this.simpDollarPrice) / totalLoss) -1 ) * 100);
+						const percentageProfit = ((totalOut - totalIn) / totalIn) * 100;
 						this.percentageProfit = percentageProfit;
 						console.log("percentageProfit:", percentageProfit);
 						console.log("balance:", parseInt(balance.result));
