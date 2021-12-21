@@ -27,21 +27,17 @@
                     </button>
                 </div>
             </div>
-            <div *ngIf="showNoSimpBalance" class="no-simp-balance">
-                <div>
-                    <p>No SIMP balance found</p>
-                    <button class="btn simp-button" (click)="buySimpPancake()">
-                        Buy
-                        <img src="/assets/img/simp-whole-logo.svg" class="buy-simp-img-button-no-balance">
-                    </button>
-                </div>
-                <img src="/assets/img/buy-simp.png">
-            </div>
             <div *ngIf="!show" class="socials">
-                <a href="https://letsallsimp.com/" target="_blank"><fa-icon class="soc-icon" [icon]="['fas','globe-europe']"></fa-icon></a>
-                <a href="https://t.me/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','telegram-plane']"></fa-icon></a>
-                <a href="https://instagram.com/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','instagram']"></fa-icon></a>
-                <a href="https://twitter.com/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','twitter']"></fa-icon></a>
+                <a href="https://letsallsimp.com/" target="_blank"><img class="soc-icon" src="/assets/img/website-icon.svg" /></a>
+                <a href="https://t.me/letsallsimp" target="_blank"><img class="soc-icon" src="/assets/img/telegram-icon.svg" /></a>
+                <a href="https://instagram.com/letsallsimp" target="_blank"><img class="soc-icon" src="/assets/img/instagram-icon.svg" /></a>
+                <a href="https://twitter.com/letsallsimp" target="_blank"><img class="soc-icon" src="/assets/img/twitter-icon.svg" /></a>
+            </div>
+            <div *ngIf="!show" class="main-social-div">
+                <button class="btn simp-button" (click)="buySimpPancake()">
+                    Buy
+                    <img src="/assets/img/simp-whole-logo.svg" class="buy-simp-img-button-no-balance">
+                </button>
             </div>
         </div>
     </div>
@@ -57,21 +53,28 @@
                 </div>
                 <div class="bg-white rounded-lg white-card" *ngIf="accountBalance">
                     <div class="text-simp-pink">Balance</div>
-                    <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ accountBalance | million: '1.0-0' }}
+                    <div class="text-black balance-div">
+                        <div>
+                            <img src="/assets/img/simp-currency-logo.svg" /> 
+                            {{ accountBalance | million: '1.0-0' }}
+                        </div>
                         <span class="d-flex fa-pull-right text-black">$ {{ simpDollarBalance | number: '1.2-2' }}</span>
                     </div>
                 </div>
                 <div class="bg-white rounded-lg white-card" *ngIf="totalReflections">
                     <div class="text-simp-pink">Earned Reflections</div>
-                    <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" /> {{ totalReflections |
-                        million }} 
+                    <div class="text-black balance-div">
+                        <div>
+                            <img src="/assets/img/simp-currency-logo.svg" />
+                            {{ totalReflections |million }} 
+                        </div>
                         <span class="d-flex fa-pull-right text-black profit">$ {{ (totalReflections / 1000000) * simpPrice | number: '1.2-2' }}</span>
                     </div>
                 </div>
                 <div (click)="shareSocial()" class="bg-white rounded-lg white-card share-card" *ngIf="PNLDollar">
                     <div class="text-simp-pink">P&L</div>
-                    <div class="text-black" [ngClass]="percentageProfit < 0 ? 'loss' : 'profit'">$ {{ PNLDollar | number: '1.2-2' }} <span *ngIf="percentageProfit" class="d-flex fa-pull-right text-black" [ngClass]="percentageProfit < 0 ? 'loss' : 'profit'">{{ percentageProfit | number: '1.2-2' }} %</span></div>
-                    <fa-icon class="share-icon" [icon]="['fas','share-square']"></fa-icon>
+                    <div class="text-black balance-div" [ngClass]="percentageProfit < 0 ? 'loss' : 'profit'">$ {{ PNLDollar | number: '1.2-2' }} <span *ngIf="percentageProfit" class="d-flex fa-pull-right text-black" [ngClass]="percentageProfit < 0 ? 'loss' : 'profit'">{{ percentageProfit | number: '1.2-2' }} %</span></div>
+                    <img class="share-icon soc-icon" src="/assets/img/share-icon.svg" />
                 </div>
             </div>
         </div>
@@ -95,10 +98,10 @@
                         number }}</div>
                 </div>
                 <div class="socials">
-                    <a href="https://letsallsimp.com/" target="_blank"><fa-icon class="soc-icon" [icon]="['fas','globe-europe']"></fa-icon></a>
-                    <a href="https://t.me/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','telegram-plane']"></fa-icon></a>
-                    <a href="https://instagram.com/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','instagram']"></fa-icon></a>
-                    <a href="https://twitter.com/letsallsimp" target="_blank"><fa-icon class="soc-icon" [icon]="['fab','twitter']"></fa-icon></a>
+                    <a href="https://letsallsimp.com/" target="_blank"><img class="soc-icon" src="/assets/img/website-icon.svg" /></a>
+                    <a href="https://t.me/letsallsimp" target="_blank"><img class="soc-icon" src="/assets/img/telegram-icon.svg" /></a>
+                    <a href="https://instagram.com/letsallsimp" target="_blank"><img class="soc-icon" src="/assets/img/instagram-icon.svg" /></a>
+                    <a href="https://twitter.com/letsallsimp" target="_blank"><img class="soc-icon" src="/assets/img/twitter-icon.svg" /></a>
                 </div>
                 <!-- Todo: find  out  how  to get volume, coingecko?               -->
                 <!--                <div class="bg-white rounded-lg white-card">-->
@@ -124,7 +127,11 @@
             <div class="input-div-main">
                 <h2 class="text-center">Transactions</h2>
                 <div class="rounded-lg text-center" *ngIf="!transactions">
-                    <span class="spinner-border spinner-border-sm"></span>
+                    <span *ngIf="!showNoSimpBalance" class="spinner-border spinner-border-sm"></span>
+                    <div class="no-transactions">
+                        <p *ngIf="showNoSimpBalance">You don’t have any transactions.</p>
+                        <p *ngIf="showNoSimpBalance">Buy some SIMP to start growing your wallet.</p>
+                    </div>
                 </div>
                 <ng-container *ngFor="let transaction of transactions">
                     <div *ngIf="transaction.bnbPrice" class="bg-white rounded-lg white-card">
@@ -166,8 +173,8 @@
     <div class="justify-content-center">
         <div class="col-12 text-center">
             <a href="https://watchmesimp.com" target="_blank" class="copyright">© WatchMeSimp.com</a><br>
-            <a href="https://didux.io" target="_blank" class="copyright-sub">WatchMeSimp is build with <fa-icon
-                    icon="heart" class="love"></fa-icon> by didux.io.</a>
+            <a href="https://didux.io" target="_blank" class="copyright-sub">WatchMeSimp is build with <img
+                    src="/assets/img/love-icon.svg" class="love"/> by didux.io.</a>
         </div>
     </div>
 </div>

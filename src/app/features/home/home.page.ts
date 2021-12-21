@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import moment from "moment";
 import { ToastrService } from "ngx-toastr";
 import { firstValueFrom } from "rxjs";
 import { IBscTransaction } from "src/app/interfaces/bsc-transaction.interface";
@@ -76,7 +75,7 @@ export class HomePageComponent extends BaseComponent {
 			context.drawImage(base_image, 0, 0);
 
 			// Step 2: Set the profit text
-			context.font = "80px Ubuntu medium";
+			context.font = "bold 80px Arial";
 			const profitColor = "#2aaa5f";
 			const lossColor = "#FF4444";
 			// this.percentageProfit = 253.64; // For testing
@@ -89,12 +88,12 @@ export class HomePageComponent extends BaseComponent {
 			}
 
 			// Step 3: Set the price text
-			context.font = "40px Ubuntu medium";
+			context.font = "bold 40px Arial";
 			context.fillStyle = "#39E5FD";
 			context.fillText(`$ ${parseFloat(this.simpPrice).toFixed(10)}`, 70, 1060);
 
 			// Step 4: Set the marketcap text
-			context.font = "40px Ubuntu medium";
+			context.font = "bold 40px Arial";
 			context.fillStyle = "#FF3654";
 			context.fillText(`$ ${this.numberWithCommas(this.marketcap.toFixed(0))}`, 570, 1060);
 
@@ -215,6 +214,7 @@ export class HomePageComponent extends BaseComponent {
 		this.accountBalance = null;
 		this.totalReflections = null;
 		this.percentageProfit = null;
+		this.PNLDollar = null;
 		try {
 			this.loading = true;
 			if (address.substring(0, 2) === "0x") {
@@ -231,7 +231,6 @@ export class HomePageComponent extends BaseComponent {
 						this.calculateDollarPrice();
 						if (parseFloat(this.simpDollarBalance) === 0) {
 							console.log("NO simp balance!");
-							this.show = false;
 							this.showNoSimpBalance = true;
 							this.loading = false;
 							return;
@@ -286,9 +285,13 @@ export class HomePageComponent extends BaseComponent {
 								transaction.bnbPrice = foundBnbPrice.price;
 								// We dont have BNB price yet, add it
 							} else {
-								const startOfDay = moment(new Date(parseInt(transaction.timeStamp) * 1000)).startOf("minute").toString();
-								console.log("startOfDay:", startOfDay);
-								const bnbPrice = parseFloat(await this.binanceProvider.getBNBPriceOnDate(new Date(startOfDay).getTime()));
+								const unixTimestamp = (parseInt(transaction.timeStamp) * 1000);
+								console.log("date:", unixTimestamp);
+								console.log("unixTimestamp:", unixTimestamp);
+								const date = new Date(unixTimestamp);
+								date.setSeconds(0);
+								console.log("date:", date);
+								const bnbPrice = parseFloat(await this.binanceProvider.getBNBPriceOnDate(date.getTime()));
 								console.log("bnbPrice:", bnbPrice);
 								await this.promiseWait(100);
 								transaction.bnbPrice = bnbPrice;

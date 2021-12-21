@@ -4,19 +4,11 @@ import { NgModule, Provider } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { FaIconLibrary, FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { fab } from "@fortawesome/free-brands-svg-icons";
-import { far } from "@fortawesome/free-regular-svg-icons";
-import { fas } from "@fortawesome/free-solid-svg-icons";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { NGXS_STORAGE_PLUGIN_OPTIONS, STORAGE_ENGINE } from "@ngxs-labs/async-storage-plugin";
 import { NgxsReduxDevtoolsPluginModule } from "@ngxs/devtools-plugin";
 import { NGXS_PLUGINS, NgxsModule } from "@ngxs/store";
-import { BsModalService, ModalModule } from "ngx-bootstrap/modal";
-import { PopoverModule } from "ngx-bootstrap/popover";
-import { NgxSpinnerModule } from "ngx-spinner";
 import { ToastrModule } from "ngx-toastr";
 import { environment } from "src/environments/environment";
 import { AppRoutingModule } from "./app-routing.module";
@@ -78,8 +70,6 @@ const NGXS_PROVIDERS: Provider[] = [
         AppRoutingModule,
         BrowserModule,
         ToastrModule.forRoot({}),
-        NgbModule,
-        FontAwesomeModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -88,31 +78,19 @@ const NGXS_PROVIDERS: Provider[] = [
             }
         }),
         ...NGXS_MODULES,
-        PopoverModule.forRoot(),
-        ModalModule.forRoot(),
         TranslateModule,
         ReactiveFormsModule,
         CommonModule,
         FormsModule,
-        FontAwesomeModule,
-        NgbModule,
-        ModalModule.forRoot(),
-        NgxSpinnerModule,
         UiSwitchModule
     ],
     providers: [
         ...NGXS_PROVIDERS,
         UtilsProvider,
-        BsModalService,
         BscScanProvider,
         BinanceProvider,
         DecimalPipe
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule {
-
-    constructor(library: FaIconLibrary) {
-        library.addIconPacks(fas, far, fab);
-    }
-}
+export class AppModule { }

@@ -1,10 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { firstValueFrom } from "rxjs";
-import { IBscTransactionResult } from "src/app/interfaces/bsc-transactions-call.interface";
-import { environment } from "src/environments/environment";
-import Web3 from "web3";
-import moment from "moment";
 
 @Injectable()
 export class BinanceProvider {
