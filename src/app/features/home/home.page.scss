@@ -44,6 +44,16 @@
         color: rgb(255, 68, 68);
     }
 
+    .no-simp-balance {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            width: 200px;
+        }
+    }
+
     .text-black.profit {
         color: rgb(0, 200, 81);
     }
@@ -143,7 +153,12 @@
         font-weight: 600;
     }
 
+    .popover-share-image {
+        max-width: 400px;
+    }
+
     .white-card {
+        position: relative;
         padding: 6px 14px 6px 14px;
         margin-bottom: 10px;
 
@@ -151,6 +166,24 @@
             width: 18px;
             margin-right: 4px;
         }
+    }
+
+    .share-card {
+        &:hover {
+            cursor: pointer;
+            opacity: 0.8;
+        }
+    }
+
+    .share-icon {
+        color: black;
+        position: absolute;
+        top: 4px;
+        right: 10px;
+    }
+
+    .buy-simp-img-button-no-balance {
+        width: 60px !important;
     }
 
     .col-img {
@@ -221,6 +254,40 @@
     .input-div-main.no-bg {
         background: none;
         padding-top: 20px;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 2;
+    }
+
+    #socialCanvas {
+        width: 0;
+        height: 0;
+    }
+
+    .overlay-background {
+        background: black;
+        height: 100%;
+        opacity: 0.9;
+    }
+
+    .overlay-buttons {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 16px;
+    }
+
+    .overlay-content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 999;
     }
 
     .input-div-main {

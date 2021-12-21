@@ -10,6 +10,7 @@ import { AppStateFacade } from "src/app/state/app/app.facade";
 import Web3 from "web3";
 import { BaseComponent } from "../base-component/base-component";
 import { Location } from "@angular/common";
+import { socialBackgroundBase64 } from "./socialBackgroundBase64";
 
 @Component({
 	templateUrl: "home.page.html",
@@ -26,13 +27,16 @@ export class HomePageComponent extends BaseComponent {
 	circulationSupply = 507116781500;
 	marketcap = 0;
 	simpBnbPrice: string;
-	simpDollarPrice: any;
+	simpDollarBalance: any;
 	simpBnbPriceCalculated: any;
 	simpReflectionsDollarPrice: any;
 	simpReflectionsBnbPrice: any;
 	percentageProfit: number;
+	PNLDollar: number;
+	socialShareImage = null;
 
 	show = false;
+	showNoSimpBalance = false;
 	showUSD = true;
 
 	constructor(
@@ -56,6 +60,89 @@ export class HomePageComponent extends BaseComponent {
 				this.checkAddress();
 			}
 		});
+	}
+
+	shareSocial(): void {
+		console.log("shareSocial");
+
+		const canvas = <HTMLCanvasElement>document.getElementById("socialCanvas");
+		canvas.height = 1249;
+		canvas.width = 900;
+		const context = canvas.getContext("2d");
+		const base_image = new Image();
+		base_image.src = socialBackgroundBase64;
+		base_image.onload = () => {
+			// Step 1: Set the background image
+			context.drawImage(base_image, 0, 0);
+
+			// Step 2: Set the profit text
+			context.font = "80px Ubuntu medium";
+			const profitColor = "#2aaa5f";
+			const lossColor = "#FF4444";
+			// this.percentageProfit = 253.64; // For testing
+			context.fillStyle = this.percentageProfit > 0 ? profitColor : lossColor;
+			const roiSymbol = this.percentageProfit > 0 ? "+" : "";
+			if (this.percentageProfit > 0) {
+				context.fillText(`${roiSymbol}${this.percentageProfit.toFixed(2)}%`, 290, 820);
+			} else {
+				context.fillText(`${roiSymbol}${this.percentageProfit.toFixed(2)}%`, 300, 820);
+			}
+
+			// Step 3: Set the price text
+			context.font = "40px Ubuntu medium";
+			context.fillStyle = "#39E5FD";
+			context.fillText(`$ ${parseFloat(this.simpPrice).toFixed(10)}`, 70, 1060);
+
+			// Step 4: Set the marketcap text
+			context.font = "40px Ubuntu medium";
+			context.fillStyle = "#FF3654";
+			context.fillText(`$ ${this.numberWithCommas(this.marketcap.toFixed(0))}`, 570, 1060);
+
+			// Step 5: Export the image as base64
+			this.socialShareImage = canvas.toDataURL();
+		}
+	}
+
+	numberWithCommas(x): string {
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+
+	clearSocialImage(): void {
+		this.socialShareImage = null;
+	}
+
+	async shareImage(): Promise<void> {
+		if (this.canShare()) {
+			const blob = await (await fetch(this.socialShareImage)).blob();
+			const file = new File([blob], "fileName.jpg", { type: blob.type });
+			const shareData = {
+				title: "Watch me SIMP",
+				text: "I am going to the moon with SIMP!",
+				files: [file]
+			}
+
+			try {
+				await navigator.share(shareData);
+				this.socialShareImage = null;
+			} catch (err) {
+				console.error(err);
+			}
+		} else {
+			console.log("Sharing not supported...");
+		}
+	}
+
+	async downloadImage(): Promise<void> {
+		// const blob = await (await fetch(this.socialShareImage)).blob();
+		// const file = new File([blob], "fileName.jpg", { type: blob.type });
+		const a = document.createElement("a");
+		a.href = this.socialShareImage
+		a.download = "file.jpg";
+		a.click();
+	}
+
+	canShare(): boolean {
+		return !!navigator.share;
 	}
 
 	async checkAddress(): Promise<void> {
@@ -89,8 +176,8 @@ export class HomePageComponent extends BaseComponent {
 	calculateDollarPrice(): void {
 		console.log("this.accountBalance:", this.accountBalance);
 		console.log("this.simpPrice:", this.simpPrice);
-		this.simpDollarPrice = ((parseFloat(this.accountBalance) / 1000000) * parseFloat(this.simpPrice)).toFixed(2);
-		console.log("this.simpDollarPrice:", this.simpDollarPrice);
+		this.simpDollarBalance = ((parseFloat(this.accountBalance) / 1000000) * parseFloat(this.simpPrice)).toFixed(2);
+		console.log("this.simpDollarBalance:", this.simpDollarBalance);
 	}
 
 	calculateSimpBnb(): void {
@@ -118,13 +205,13 @@ export class HomePageComponent extends BaseComponent {
 	}
 
 	async retrieveSimpInformation(address: string): Promise<void> {
-		if(address !== null) {
-			this.location.replaceState("/"+address);
+		if (address !== null) {
+			this.location.replaceState("/" + address);
 		}
 		console.log("retrieveSimpInformation address:", address);
 		this.show = true;
 		this.transactions = null;
-		this.simpDollarPrice = null;
+		this.simpDollarBalance = null;
 		this.accountBalance = null;
 		this.totalReflections = null;
 		this.percentageProfit = null;
@@ -142,6 +229,15 @@ export class HomePageComponent extends BaseComponent {
 						console.log("balance:", balance);
 						this.accountBalance = balance.result;
 						this.calculateDollarPrice();
+						if (parseFloat(this.simpDollarBalance) === 0) {
+							console.log("NO simp balance!");
+							this.show = false;
+							this.showNoSimpBalance = true;
+							this.loading = false;
+							return;
+						} else {
+							this.showNoSimpBalance = false;
+						}
 						this.calculateSimpBnb();
 						this.transactions = (await this.bscScanProvider.getSimpTransactions(address)).result;
 
@@ -150,7 +246,7 @@ export class HomePageComponent extends BaseComponent {
 						console.log("bnbPriceHistory:", bnbPriceHistory);
 						let totalSimpBought = 0;
 						let totalIn = 0;
-						let totalOut = parseFloat(this.simpDollarPrice);
+						let totalOut = parseFloat(this.simpDollarBalance);
 						for (const transaction of this.transactions) {
 							const bought = transaction.to.toLowerCase() === address.toLowerCase();
 							transaction.bought = bought;
@@ -172,7 +268,7 @@ export class HomePageComponent extends BaseComponent {
 							const transactionReceipt = await this.bscScanProvider.getTransactionDetails(transaction.hash);
 							console.log("transactionReceipt:", transactionReceipt);
 							const wBnb = await this.getWBNBFromTransactionReceipt(transactionReceipt);
-							if (wBnb  !== "0") {
+							if (wBnb !== "0") {
 								transaction.bnbAmount = Web3.utils.fromWei(wBnb, "ether");
 							} else if (wBnb === "0" && bought) {
 								console.log("transfer in");
@@ -188,7 +284,7 @@ export class HomePageComponent extends BaseComponent {
 							if (foundBnbPrice) {
 								console.log("Found BNB price:", foundBnbPrice);
 								transaction.bnbPrice = foundBnbPrice.price;
-							// We dont have BNB price yet, add it
+								// We dont have BNB price yet, add it
 							} else {
 								const startOfDay = moment(new Date(parseInt(transaction.timeStamp) * 1000)).startOf("minute").toString();
 								console.log("startOfDay:", startOfDay);
@@ -201,7 +297,7 @@ export class HomePageComponent extends BaseComponent {
 									transactionTimestamp: transaction.timeStamp
 								})
 							}
-							
+
 							console.log("transaction.bnbPrice:", transaction.bnbPrice);
 							const dollarSpend = transaction.bnbAmount ? parseFloat(transaction.bnbAmount) * transaction.bnbPrice : 0;
 							if (bought) {
@@ -215,6 +311,10 @@ export class HomePageComponent extends BaseComponent {
 						console.log("totalOut:", totalOut);
 						console.log("totalIn:", totalIn);
 						const percentageProfit = ((totalOut - totalIn) / totalIn) * 100;
+						// const moneySpend = totalIn - (totalOut - parseFloat(this.simpDollarBalance));
+						const PNLDollar = totalOut - totalIn;
+						console.log("PNLDollar:", PNLDollar);
+						this.PNLDollar = PNLDollar;
 						this.percentageProfit = percentageProfit;
 						console.log("percentageProfit:", percentageProfit);
 						console.log("balance:", parseInt(balance.result));
@@ -251,4 +351,3 @@ export class HomePageComponent extends BaseComponent {
 		window.open("https://pancakeswap.finance/swap?inputCurrency=BNB&outputCurrency=0xd0accf05878cafe24ff8b3f82f194c62ed755707");
 	}
 }
-
