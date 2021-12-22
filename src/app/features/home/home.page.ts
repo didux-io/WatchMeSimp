@@ -61,8 +61,8 @@ export class HomePageComponent extends BaseComponent {
 		});
 	}
 
-	shareSocial(): void {
-		console.log("shareSocial");
+	shareSocial(type: string): void {
+		console.log("shareSocial:", type);
 
 		const canvas = <HTMLCanvasElement>document.getElementById("socialCanvas");
 		canvas.height = 1249;
@@ -73,20 +73,50 @@ export class HomePageComponent extends BaseComponent {
 		base_image.onload = () => {
 			// Step 1: Set the background image
 			context.drawImage(base_image, 0, 0);
-
-			// Step 2: Set the profit text
-			context.font = "bold 80px Arial";
-			const profitColor = "#2aaa5f";
-			const lossColor = "#FF4444";
-			// this.percentageProfit = 253.64; // For testing
-			context.fillStyle = this.percentageProfit > 0 ? profitColor : lossColor;
 			context.textAlign = "center";
-			const roiSymbol = this.percentageProfit > 0 ? "+" : "";
-			if (this.percentageProfit > 0) {
-				context.fillText(`${roiSymbol}${this.percentageProfit.toFixed(2)}%`, 450, 800);
+
+			// Step 2: Set the text
+			// Step 2a: PROFIT
+			if(type === "profit") {
+				// title
+				context.font = "bolder 70px Arial";
+				context.fillStyle = "#FFFFFF"
+				context.fillText("ROI", 450, 700);
+
+				// Amount
+				context.font = "bold 100px Arial";
+				const profitColor = "#2aaa5f";
+				const lossColor = "#FF4444";
+				context.fillStyle = this.percentageProfit > 0 ? profitColor : lossColor;
+				const roiSymbol = this.percentageProfit > 0 ? "+" : "";
+				if (this.percentageProfit > 0) {
+					context.fillText(`${roiSymbol}${this.percentageProfit.toFixed(2)}%`, 450, 800);
+				} else {
+					context.fillText(`${roiSymbol}${this.percentageProfit.toFixed(2)}%`, 450, 800);
+				}
 			} else {
-				context.fillText(`${roiSymbol}${this.percentageProfit.toFixed(2)}%`, 450, 800);
+				// Step 2b: Reflections
+				// title
+				context.font = "bolder 70px Arial";
+				context.fillStyle = "#FFFFFF"
+				context.fillText("I EARNED", 450, 600);
+
+				// Reflections
+				context.font = "bold 100px Arial";
+				context.fillStyle = "#2aaa5f";
+				const reflections = (parseInt(this.totalReflections) / 1000000 * parseFloat(this.simpPrice)).toLocaleString("en-US", { maximumFractionDigits: 2});
+				context.fillText(`$ ${reflections}`, 450, 700);
+
+				// subtitle
+				context.font = "bolder 50px Arial";
+				context.fillStyle = "#FFFFFF"
+				context.fillText("BY HODL SIMP", 450, 770);
+
+				// context.font = "bolder 60px Arial";
+				// context.fillStyle = "#FFFFFF"
+				// context.fillText("REFLECTIONS EARNED!", 450, 800);
 			}
+
 
 			// Step 3: Set the price text
 			context.font = "bold 40px Arial";

@@ -91,7 +91,7 @@
                         <div class="col-auto d-flex align-items-center ml-auto">
                             <span class="d-flex fa-pull-right text-black profit">$ {{ (totalReflections / 1000000) * simpPrice | number: '1.0-2' }}</span>
                         </div>
-                        <div class="col-auto d-flex align-items-center mr-0">
+                        <div (click)="shareSocial('reflections')" class="col-auto d-flex align-items-center mr-0">
                             <!-- Share icon -->
                             <svg class="icon" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 227.216 227.216" xml:space="preserve">
                                 <path d="M175.897,141.476c-13.249,0-25.11,6.044-32.98,15.518l-51.194-29.066c1.592-4.48,2.467-9.297,2.467-14.317
@@ -120,7 +120,7 @@
                         <div class="col-auto d-flex align-items-center float-right ml-auto">
                             <span *ngIf="percentageProfit" class="d-flex fa-pull-right text-black" [ngClass]="percentageProfit < 0 ? 'loss' : 'profit'">{{ percentageProfit | number: '1.2-2' }} %</span>
                         </div>
-                        <div (click)="shareSocial()" class="col-auto d-flex align-items-center mr-0">
+                        <div (click)="shareSocial('profit')" class="col-auto d-flex align-items-center mr-0">
                             <!-- Share icon -->
                             <svg class="icon" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 227.216 227.216" xml:space="preserve">
                                 <path d="M175.897,141.476c-13.249,0-25.11,6.044-32.98,15.518l-51.194-29.066c1.592-4.48,2.467-9.297,2.467-14.317
