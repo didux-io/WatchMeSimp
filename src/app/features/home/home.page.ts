@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
 import { firstValueFrom } from "rxjs";
 import { IBscTransaction } from "src/app/interfaces/bsc-transaction.interface";
@@ -43,13 +43,14 @@ export class HomePageComponent extends BaseComponent {
 		private toastrService: ToastrService,
 		private appStateFacade: AppStateFacade,
 		private binanceProvider: BinanceProvider,
-		private router: ActivatedRoute,
+		private route: ActivatedRoute,
+		private router: Router,
 		private location: Location
 	) {
 		super();
 		this.getSimpPrice();
 
-		this.router.params.subscribe((params) => {
+		this.route.params.subscribe((params) => {
 			console.log("params:", params);
 			const address = params.address;
 			if (address) {
@@ -59,10 +60,16 @@ export class HomePageComponent extends BaseComponent {
 				this.checkAddress();
 			}
 		});
+
+		window.onhashchange = () => {
+			this.clearSocialImage();
+		}
 	}
 
 	shareSocial(type: string): void {
 		console.log("shareSocial:", type);
+
+		window.location.href = `${window.location.href}#popup`;
 
 		const canvas = <HTMLCanvasElement>document.getElementById("socialCanvas");
 		canvas.height = 1249;
@@ -77,7 +84,7 @@ export class HomePageComponent extends BaseComponent {
 
 			// Step 2: Set the text
 			// Step 2a: PROFIT
-			if(type === "profit") {
+			if (type === "profit") {
 				// title
 				context.font = "bolder 70px Arial";
 				context.fillStyle = "#FFFFFF"
@@ -104,7 +111,7 @@ export class HomePageComponent extends BaseComponent {
 				// Reflections
 				context.font = "bold 100px Arial";
 				context.fillStyle = "#2aaa5f";
-				const reflections = (parseInt(this.totalReflections) / 1000000 * parseFloat(this.simpPrice)).toLocaleString("en-US", { maximumFractionDigits: 2});
+				const reflections = (parseInt(this.totalReflections) / 1000000 * parseFloat(this.simpPrice)).toLocaleString("en-US", { maximumFractionDigits: 2 });
 				context.fillText(`$ ${reflections}`, 450, 700);
 
 				// subtitle
@@ -126,7 +133,7 @@ export class HomePageComponent extends BaseComponent {
 			// Step 4: Set the marketcap text
 			context.font = "bold 40px Arial";
 			context.fillStyle = "#FF3654";
-			context.fillText(`$ ${this.marketcap.toLocaleString("en-US", { maximumFractionDigits: 0})}`, 675, 1050);
+			context.fillText(`$ ${this.marketcap.toLocaleString("en-US", { maximumFractionDigits: 0 })}`, 675, 1050);
 
 			// Step 5: Export the image as base64
 			this.socialShareImage = canvas.toDataURL();
@@ -229,6 +236,7 @@ export class HomePageComponent extends BaseComponent {
 	}
 
 	async retrieveSimpInformation(address: string): Promise<void> {
+		address = address.trim();
 		if (address !== null) {
 			this.location.replaceState("/" + address);
 		}
@@ -254,7 +262,9 @@ export class HomePageComponent extends BaseComponent {
 						console.log("balance:", balance);
 						this.accountBalance = balance.result;
 						this.calculateDollarPrice();
-						if (parseFloat(this.simpDollarBalance) === 0) {
+						this.calculateSimpBnb();
+						this.transactions = (await this.bscScanProvider.getSimpTransactions(address)).result;
+						if (this.transactions.length === 0) {
 							console.log("NO simp balance!");
 							this.showNoSimpBalance = true;
 							this.loading = false;
@@ -262,9 +272,6 @@ export class HomePageComponent extends BaseComponent {
 						} else {
 							this.showNoSimpBalance = false;
 						}
-						this.calculateSimpBnb();
-						this.transactions = (await this.bscScanProvider.getSimpTransactions(address)).result;
-
 
 						const bnbPriceHistory = await firstValueFrom(this.appStateFacade.bnbPriceHistory$);
 						console.log("bnbPriceHistory:", bnbPriceHistory);
