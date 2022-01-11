@@ -10,6 +10,7 @@ import { NGXS_STORAGE_PLUGIN_OPTIONS, STORAGE_ENGINE } from "@ngxs-labs/async-st
 import { NgxsReduxDevtoolsPluginModule } from "@ngxs/devtools-plugin";
 import { NGXS_PLUGINS, NgxsModule } from "@ngxs/store";
 import { ToastrModule } from "ngx-toastr";
+import { UiSwitchModule } from "ngx-toggle-switch";
 import { environment } from "src/environments/environment";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -18,10 +19,11 @@ import { StoragePlugin } from "./ngxs-plugins/storage/storage.plugin";
 import { MillionPipe } from "./pipes/million-pipe";
 import { BinanceProvider } from "./providers/binance/binanceProvider";
 import { BscScanProvider } from "./providers/bscScan/bscScanProvider";
+import { CoinGeckoProvider } from "./providers/coinGecko/coinGeckoProvider";
+import { PancakeSwapProvider } from "./providers/pancakeSwap/pancakeSwapProvider";
 import { StorageProvider } from "./providers/storage/capacitor-storage.provider";
-import { UtilsProvider } from "./providers/utils/utils";
+import { Web3Provider } from "./providers/web3/web3Provider";
 import { AppStateModule } from "./state/app/app.module";
-import { UiSwitchModule } from "ngx-toggle-switch";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -86,9 +88,11 @@ const NGXS_PROVIDERS: Provider[] = [
     ],
     providers: [
         ...NGXS_PROVIDERS,
-        UtilsProvider,
         BscScanProvider,
         BinanceProvider,
+        CoinGeckoProvider,
+        PancakeSwapProvider,
+        Web3Provider,
         DecimalPipe
     ],
     bootstrap: [AppComponent]

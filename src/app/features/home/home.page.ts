@@ -7,6 +7,9 @@ import { BinanceProvider } from "src/app/providers/binance/binanceProvider";
 import { BscScanProvider } from "src/app/providers/bscScan/bscScanProvider";
 import { AppStateFacade } from "src/app/state/app/app.facade";
 import Web3 from "web3";
+import { CoinGeckoProvider } from "../../providers/coinGecko/coinGeckoProvider";
+import { PancakeSwapProvider } from "../../providers/pancakeSwap/pancakeSwapProvider";
+import { Web3Provider } from "../../providers/web3/web3Provider";
 import { BaseComponent } from "../base-component/base-component";
 import { Location } from "@angular/common";
 import { socialBackgroundBase64 } from "./socialBackgroundBase64";
@@ -21,9 +24,11 @@ export class HomePageComponent extends BaseComponent {
 	accountBalance: string;
 	totalReflections: string;
 	transactions: IBscTransaction[];
+	processedTransactions: number;
 	loading: boolean;
 	simpPrice: string;
 	circulationSupply = 507116781500;
+	volume = null;
 	marketcap = 0;
 	simpBnbPrice: string;
 	simpDollarBalance: string;
@@ -43,22 +48,26 @@ export class HomePageComponent extends BaseComponent {
 		private toastrService: ToastrService,
 		private appStateFacade: AppStateFacade,
 		private binanceProvider: BinanceProvider,
+		private coinGeckoProvider: CoinGeckoProvider,
+		private pancakeSwapProvider: PancakeSwapProvider,
+		private web3Provider: Web3Provider,
 		private route: ActivatedRoute,
 		private router: Router,
 		private location: Location
 	) {
 		super();
-		this.getSimpPrice();
-
-		this.route.params.subscribe((params) => {
-			console.log("params:", params);
-			const address = params.address;
-			if (address) {
-				this.appStateFacade.setAddress(address);
-				this.retrieveSimpInformation(address);
-			} else {
-				this.checkAddress();
-			}
+		this.getSimpPrice().then(() => {
+			// Prevent empty prices.. ;)
+			this.route.params.subscribe((params) => {
+				console.log("params:", params);
+				const address = params.address;
+				if (address) {
+					this.appStateFacade.setAddress(address);
+					this.retrieveSimpInformation(address);
+				} else {
+					this.checkAddress();
+				}
+			});
 		});
 
 		window.onhashchange = () => {
@@ -197,10 +206,19 @@ export class HomePageComponent extends BaseComponent {
 	}
 
 	async getSimpPrice(): Promise<void> {
-		const result = (await this.bscScanProvider.getSimpPrice()).data;
-		console.log("getSimpPrice:", result);
-		this.simpPrice = result.price;
-		this.simpBnbPrice = result.price_BNB;
+		const result = await this.coinGeckoProvider.getSimpDetails();
+		if (result) {
+			console.log("CoinGecko Data", result);
+			this.volume = result.market_data.total_volume.usd;
+			this.simpPrice = result.market_data.current_price.usd;
+			this.simpBnbPrice = result.market_data.current_price.bnb;
+		} else {
+			const result = (await this.pancakeSwapProvider.getSimpPrice()).data;
+			console.log("getSimpPrice:", result);
+			this.volume = null;
+			this.simpPrice = result.price;
+			this.simpBnbPrice = result.price_BNB;
+		}
 		this.marketcap = parseFloat(this.simpPrice) * this.circulationSupply;
 	}
 
@@ -248,10 +266,14 @@ export class HomePageComponent extends BaseComponent {
 		this.totalReflections = null;
 		this.percentageProfit = null;
 		this.PNLDollar = null;
+		this.processedTransactions = 0;
 		try {
 			this.loading = true;
 			if (address.substring(0, 2) === "0x") {
-				const balance = await this.bscScanProvider.getAccountBalance(address);
+				// const balance = await this.bscScanProvider.getAccountBalance(address);
+				const balance = await this.web3Provider.getAccountBalance(address);
+
+				console.log("Balance", balance);
 				if (balance.status === "0") {
 					this.toastrService.error(balance.result);
 					this.loading = false;
@@ -296,7 +318,7 @@ export class HomePageComponent extends BaseComponent {
 								console.log("totalSimpBought:", totalSimpBought);
 							}
 
-							const transactionReceipt = await this.bscScanProvider.getTransactionDetails(transaction.hash);
+							const transactionReceipt = await this.web3Provider.getTransactionDetails(transaction.hash);
 							console.log("transactionReceipt:", transactionReceipt);
 							const wBnb = await this.getWBNBFromTransactionReceipt(transactionReceipt);
 							if (wBnb !== "0") {
@@ -342,6 +364,7 @@ export class HomePageComponent extends BaseComponent {
 								console.log("dollarSpend:", dollarSpend);
 								totalOut += dollarSpend;
 							}
+							this.processedTransactions++;
 						}
 						console.log("totalOut:", totalOut);
 						console.log("totalIn:", totalIn);
@@ -360,7 +383,7 @@ export class HomePageComponent extends BaseComponent {
 						this.calculateReflectionsBnbPrice();
 
 						this.loading = false;
-					}, 6000);
+					}, 100);
 				}
 			} else {
 				this.toastrService.error("User address input not valid");

@@ -6,7 +6,7 @@
     "prebuild": "node prebuild.js",
     "ng": "ng",
     "start": "ng serve --port=4230 --host=0.0.0.0",
-    "start:test": "ng serve --port=4230 --host=0.0.0.0 --disable-host-check  --ssl true --ssl-key ./node_modules/browser-sync/certs/server.key --ssl-cert ./node_modules/browser-sync/certs/server.crt",
+    "start:ssl": "ng serve --port=4230 --host=0.0.0.0 --disable-host-check  --ssl true --ssl-key ./node_modules/browser-sync/certs/server.key --ssl-cert ./node_modules/browser-sync/certs/server.crt",
     "build": "npm run lint:json && ng version; ng build --prod",
     "lint": "eslint . --ext .ts",
     "lint:json": "eslint . --ext .ts -f json -o coverage/eslint.json",

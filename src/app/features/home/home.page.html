@@ -64,9 +64,6 @@
         <div class="col-12 col-md-6 col-lg-4">
             <div class="input-div-main">
                 <h2 class="text-center">My wallet</h2>
-                <div class="rounded-lg text-center" *ngIf="!accountBalance">
-                    <span class="spinner-border spinner-border-sm"></span>
-                </div>
                 <div class="bg-white rounded-lg white-card" *ngIf="accountBalance">
                     <div class="row">
                         <div class="col-auto">
@@ -138,6 +135,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="rounded-lg text-center" *ngIf="!accountBalance || !totalReflections || !PNLDollar">
+                    <span>Processing tx {{ processedTransactions }} out {{ transactions.length }} </span> <span class="spinner-border spinner-border-sm"></span>
+                </div>
             </div>
         </div>
         <div class="col-12 d-none d-lg-block col-lg-4">
@@ -157,6 +157,10 @@
                 <div class="bg-white rounded-lg white-card">
                     <div class="text-simp-pink">Circulating supply</div>
                     <div class="text-black"><img src="/assets/img/simp-currency-logo.svg" />{{ circulationSupply | number }}</div>
+                </div>
+                <div class="bg-white rounded-lg white-card" *ngIf="volume">
+                    <div class="text-simp-pink">24hr volume</div>
+                    <div class="text-black">$ {{ volume | number: '1.0-0' }}</div>
                 </div>
                 <div class="socials">
                     <a href="https://letsallsimp.com/" target="_blank">
